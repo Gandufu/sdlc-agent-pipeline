@@ -114,7 +114,8 @@ sdlc-agent-pipeline/
 │   ├── hooks.json              # 钩子配置（PreToolUse 阶段门禁 + SessionStart 状态注入）
 │   └── scripts/gate-check.js   # 确定性门禁脚本
 ├── scripts/
-│   └── sdlc-state.js           # 流水线状态管理（init/confirm/revoke/status[--brief]/reset）
+│   ├── sdlc-state.js           # 流水线状态管理（init/confirm/revoke/status[--brief]/reset）
+│   └── validate-handoff.js     # 交接块机器校验（exit 0 通过 / 2 校验失败 / 1 用法错误）
 ├── tests/                      # 脚本单元测试（node --test）
 └── templates/
     ├── docs/

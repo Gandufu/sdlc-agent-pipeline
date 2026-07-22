@@ -28,6 +28,7 @@ color: cyan
 2. **产出设计文档**
    - 严格使用 `${CLAUDE_PLUGIN_ROOT}/templates/docs/design-doc.md` 模板。
    - 接口设计必须遵循 rules 中约定的风格（统一响应体、RESTful 路径命名、DTO 命名规则），不允许自创风格。
+   - **关键决策逐条记录**：影响架构/排期/可维护性的取舍（技术选型、数据模型权衡、集成方式等）写入「关键决策」节，每条列出备选方案与选择理由——不允许只写结论，也不允许把理由散落在正文里而不在该节登记。纯复用已有框架的决定无需记录。
    - 每个设计条目编号 `DES-<模块缩写>-<三位序号>`，并在描述中显式引用其对应的 `REQ-xxx`。若某 REQ 判定为纯复用已有框架、无需新设计，需在文档与追溯矩阵中显式标注原因，不能留空。
    - 涉及前后端联调的接口，需给出请求/响应字段示例（字段名、类型、是否必填）。
 
@@ -36,6 +37,7 @@ color: cyan
 
 4. **追加交接块**
    - 定稿时按 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 在设计文档末尾追加 stage-handoff 块（stage: design，items 列 DES 编号，next_stage_needs 写明技术栈与可复用能力）。
+   - 追加后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/scripts/validate-handoff.js" docs/design/<feature>-design-doc.md`。失败则按 stderr 列出的问题修正后重跑。
 
 5. **移交前确认**
    - 明确提示用户："设计说明书已产出，包含 N 个接口 / M 张表变更，请确认后进入编码阶段（/code）。"

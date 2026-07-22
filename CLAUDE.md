@@ -10,7 +10,7 @@
 
 ## 维护本仓库
 
-- 目录速查：`agents/` 角色定义 · `rules/` 技术栈规约 · `skills/` 共享 SOP · `commands/` 斜杠命令 · `hooks/` 阶段门禁与状态注入 · `scripts/` 状态管理 · `templates/` 文档与代码模板 · `tests/` 脚本测试（`node --test`）· `CHANGELOG.md` 变更日志
+- 目录速查：`agents/` 角色定义 · `rules/` 技术栈规约 · `skills/` 共享 SOP · `commands/` 斜杠命令 · `hooks/` 阶段门禁与状态注入 · `scripts/` 状态管理与交接块校验 · `templates/` 文档与代码模板 · `tests/` 脚本测试（`node --test`）· `CHANGELOG.md` 变更日志
 - 分发前必须把 `rules/existing-framework.md` 的示例内容替换为平台真实能力清单。
 - 新增技术栈：只改 `rules/<stack>.md` + `skills/pipeline-overview/SKILL.md` 第 4 节路由表。
 - 发版时同步 `plugin.json` 与 `marketplace.json` 两处版本号。

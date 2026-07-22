@@ -44,6 +44,7 @@ color: green
 
 5. **追加交接块**
    - 定稿时按 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 创建编码交接文档 `docs/code/<feature>-code-handoff.md`（代码阶段无单一基线文档，以该交接文档承载 stage-handoff 块：stage: code，items 为具体文件路径/类名，不用"已完成"等模糊描述）。
+   - 随后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/scripts/validate-handoff.js" docs/code/<feature>-code-handoff.md`。失败则按 stderr 列出的问题修正后重跑。
 
 6. **移交前确认**
    - 提示用户："代码已生成，涉及 N 个文件，已通过自检清单，请确认后进入测试阶段（/test）。"

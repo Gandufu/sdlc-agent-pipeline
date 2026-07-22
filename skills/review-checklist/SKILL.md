@@ -9,7 +9,7 @@ description: 分阶段完整性评审清单。当 reviewer agent 对任一阶段
 
 - [ ] 产出存在且非空，路径符合约定：需求/设计/测试阶段为 `docs/requirements|design|test/` 下的基线文档；编码阶段为代码本身 + `docs/code/<feature>-code-handoff.md`。
 - [ ] 追溯矩阵（用户项目 `docs/traceability-matrix.md`）对应列已回填（见 `${CLAUDE_PLUGIN_ROOT}/skills/traceability-matrix/SKILL.md`），无空列且未标注原因。
-- [ ] 交接块已追加且 `matrix_updated: true`（见 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md`）。
+- [ ] 交接块通过机器校验：运行 `node "${CLAUDE_PLUGIN_ROOT}/scripts/validate-handoff.js" <基线文档路径>` 退出码为 0（块存在、字段完整、`matrix_updated: true`、items 编号前缀符合阶段约定）；校验失败即判退回，格式见 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md`。
 - [ ] 编号唯一、无复用（REQ/DES/TC 各自不重复）。
 
 ## 需求阶段
@@ -21,6 +21,7 @@ description: 分阶段完整性评审清单。当 reviewer agent 对任一阶段
 ## 设计阶段
 
 - [ ] DES 与 REQ 一一对应，或标注 `N/A(复用)` 并简述原因。
+- [ ] 「关键决策」节逐条记录重要取舍：每条有备选方案与选择理由（不接受只有结论的"合理"），纯复用项未滥竽充数。
 - [ ] 接口定义/分层/命名符合对应技术栈 `${CLAUDE_PLUGIN_ROOT}/rules/*.md`。
 - [ ] 数据模型、接口路径、统一响应体、错误码约定完整。
 

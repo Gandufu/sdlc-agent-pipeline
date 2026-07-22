@@ -26,7 +26,7 @@ color: blue
 
 2. **澄清与追问**
    - 按 `${CLAUDE_PLUGIN_ROOT}/skills/requirement-clarification/SKILL.md` 的 SOP 执行结构化澄清：对模糊表述主动追问，每轮聚焦 1-2 个关键问题，先查后问，禁止编造非功能性数字。
-   - 若输入已附带 grill 式澄清结论（如 `/init` 已在主会话完成逐轮追问并附上用户回答）：只按 SOP 收敛标准逐项核对，无需重启整轮追问；仍有关键缺口时，一次性列出问题清单返回调用方，由其在主会话补充追问后重新调用——子代理无法与用户直接交互，不要在子代理内假装已澄清。
+   - 若输入附带澄清笔记文件（如 `/init` 已在主会话完成逐轮追问并生成 `docs/requirements/<feature-slug>-clarification-notes.md`）：**先读该笔记**，只按 SOP 收敛标准逐项核对，无需重启整轮追问；仍有关键缺口时，一次性列出问题清单返回调用方，由其在主会话补充追问并**更新笔记文件**后重新调用——子代理无法与用户直接交互，不要在子代理内假装已澄清。
 
 3. **结构化输出**
    - 严格按照 `${CLAUDE_PLUGIN_ROOT}/templates/docs/requirement-spec.md` 模板产出。
@@ -39,6 +39,7 @@ color: blue
 
 5. **追加交接块**
    - 定稿时按 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 在基线文档末尾追加机器可读的 stage-handoff 块（stage: requirement，items 列全部 REQ 编号与关键约束，matrix_updated 按实际填写）。
+   - 追加后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/scripts/validate-handoff.js" docs/requirements/<feature-slug>-requirement-spec.md`。失败则按 stderr 列出的问题修正后重跑——定稿以脚本结果为准，不以"我认为已写好"为准。
 
 6. **移交前确认**
    - 完成后，明确告知用户："需求规格已产出，请确认 REQ 编号与验收标准是否准确，确认后可进入设计阶段（/design）。"

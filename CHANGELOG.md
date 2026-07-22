@@ -8,6 +8,9 @@
 
 ### Added
 
+- **handoff 交接块机器校验** `scripts/validate-handoff.js`：把 `skills/context-handoff` 的格式约定变成可执行断言（evidence over claims）——四个阶段 agent 定稿时自检、reviewer 评审复检、编排引擎解析前校验均以此脚本退出码为准。校验项：交接块存在、stage/status 枚举、`matrix_updated` 必须为 true、items 非空且 id 前缀符合阶段约定（REQ-/DES-/TC-，code 阶段不限）、next_stage_needs 为数组；失败 exit 2 并一次性列出全部问题。配套 15 个单元测试。
+- **设计决策记录机制**：`design-doc.md` 模板新增「关键决策」节（决策项 / 备选方案 / 选择与理由 / 影响），architect SOP 要求影响架构/排期/可维护性的取舍逐条登记、不允许只写结论；评审清单设计组增加对应检查项。
+- **grill 澄清结论文件化持久**：`requirement-clarification` SOP 新增「结论沉淀」节——每轮澄清结论增量写入 `docs/requirements/<feature>-clarification-notes.md`（只追加、不重写历史轮次），防上下文压缩丢失澄清细节；`init.md` 与 requirements-analyst SOP 改为以该笔记文件为定稿依据。
 - **SessionStart 钩子**：会话启动时自动把当前流水线状态注入会话上下文（feature、各阶段确认情况、「← 当前」标记与下一步建议）。无状态文件时零输出，不干扰非编排模式会话；状态损坏时输出修复指引但不阻塞会话启动。对应命令：`sdlc-state.js status --brief`。
 - **单元测试套件** `tests/`：基于 `node:test`（零依赖），以子进程 + 隔离临时目录方式覆盖门禁 `gate-check.js` 的全部放行/阻断分支，与状态管理 `sdlc-state.js` 的状态机跃迁、覆写保护、`--brief` 各输出形态。运行：`node --test`。
 - `plugin.json` 增加 `license` 字段（MIT），仓库根新增 `LICENSE` 文件。
