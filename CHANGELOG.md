@@ -4,47 +4,48 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 发版时须同步 `.claude-plugin/plugin.json` 与 `.claude-plugin/marketplace.json` 两处版本号（见 CLAUDE.md）。
 
-## [Unreleased]
+## [0.3.0] - 2026-07-23
+
+### Changed（架构重构 v3：对齐官方插件规范）
+
+基于 Claude Code 官方插件文档（code.claude.com/docs/zh-CN/plugins）全面对齐：
+
+- **删除 `commands/` 目录**：官方明确 "Skills as flat Markdown files. Use `skills/` for new plugins"。全部 9 个命令迁移为 user-invoked skill（`skills/<name>/SKILL.md` + `disable-model-invocation: true`），`/xxx` 触发方式不变。
+- **恢复 4 个 agent（全部带工具限制）**：
+  - `architect`：tools: Read,Write,Grep,Glob（无 Bash/Edit——设计师不跑命令、不改已有文件）+ `skills:` 预加载 context-handoff / traceability-matrix。
+  - `developer`：tools: 全部（**上下文隔离**——编码产出大量文件不塞主会话，官方 agent 五大用途之首 "Preserve context"）+ `skills:` 预加载。
+  - `tester`：tools: Read,Write,Bash,Grep,Glob（**无 Edit——不能改被测代码**，核心约束）+ `skills:` 预加载。
+  - `reviewer`：tools: Read,Grep,Glob（只读）+ `skills:` 预加载 review-checklist。
+- **Agent `skills:` 预加载**（官方 frontmatter 字段）：消除 agent body 与 skill 的内容重复——定稿协议、矩阵 SOP、评审清单自动注入子代理上下文。
+- **用户命令体系（5+2）**：`/init`（技术栈→脚手架→门禁初始化→grill→定稿）、`/grill`（独立需求拷问→定稿）、`/design`（门禁→architect agent）、`/code`（门禁→developer agent）、`/test`（门禁→tester agent）+ `/approve` `/reject`（门禁操作）。
+- **grill 在主会话执行**：官方硬约束——子代理不能使用 AskUserQuestion，需求拷问必须与用户交互。
+- **版本号 0.2.0 → 0.3.0**。
 
 ### Added
 
-- **handoff 交接块机器校验** `scripts/validate-handoff.js`：把 `skills/context-handoff` 的格式约定变成可执行断言（evidence over claims）——四个阶段 agent 定稿时自检、reviewer 评审复检、编排引擎解析前校验均以此脚本退出码为准。校验项：交接块存在、stage/status 枚举、`matrix_updated` 必须为 true、items 非空且 id 前缀符合阶段约定（REQ-/DES-/TC-，code 阶段不限）、next_stage_needs 为数组；失败 exit 2 并一次性列出全部问题。配套 15 个单元测试。
-- **设计决策记录机制**：`design-doc.md` 模板新增「关键决策」节（决策项 / 备选方案 / 选择与理由 / 影响），architect SOP 要求影响架构/排期/可维护性的取舍逐条登记、不允许只写结论；评审清单设计组增加对应检查项。
-- **grill 澄清结论文件化持久**：`requirement-clarification` SOP 新增「结论沉淀」节——每轮澄清结论增量写入 `docs/requirements/<feature>-clarification-notes.md`（只追加、不重写历史轮次），防上下文压缩丢失澄清细节；`init.md` 与 requirements-analyst SOP 改为以该笔记文件为定稿依据。
-- **handoff 块三阶段完整示例** `skills/context-handoff/examples/`：design/code/test 各一份可照抄的交接块范例（示例自身可通过 `validate-handoff.js` 校验，配套单元测试永久锁定其与格式约定的一致性）。
-- **SessionStart 钩子**：会话启动时自动把当前流水线状态注入会话上下文（feature、各阶段确认情况、「← 当前」标记与下一步建议）。无状态文件时零输出，不干扰非编排模式会话；状态损坏时输出修复指引但不阻塞会话启动。对应命令：`sdlc-state.js status --brief`。
-- **单元测试套件** `tests/`：基于 `node:test`（零依赖），以子进程 + 隔离临时目录方式覆盖门禁 `gate-check.js` 的全部放行/阻断分支，与状态管理 `sdlc-state.js` 的状态机跃迁、覆写保护、`--brief` 各输出形态。运行：`node --test`。
-- `plugin.json` 增加 `license` 字段（MIT），仓库根新增 `LICENSE` 文件。
-- `marketplace.json` 插件条目增加 `category` 与 `tags`（marketplace 发现性）。
-- 5 个 agent 的 frontmatter 增加 `color` 字段与 `<example>` 触发示例块（官方 agent 规范，提升子代理路由准确度与多代理会话辨识度）。
+- **脚手架机制**：`bin/scaffold.js`（Node.js 零依赖，插件启用后加入 PATH 可裸命令调用）+ `templates/scaffold/java-spring/` 与 `templates/scaffold/vue/` 项目骨架模板 + `skills/scaffold/` 规范。`/init` 首步选技术栈后自动拷贝。
+- **`skills/init/`**：一站式初始化（选技术栈→scaffold→门禁初始化→grill→需求定稿）。
+- **`skills/grill/`**：独立需求拷问与定稿（可不经 /init 单独使用）。
+- **`skills/design/` / `skills/code/` / `skills/test/`**：user-invoked 阶段入口（门禁检查→派发对应 agent→汇报）。
+- **`skills/approve/` / `skills/reject/` / `skills/pipeline/`**：门禁操作与编排（替代旧 commands/）。
 
-### Changed
+### Removed
 
-- 命令 `argument-hint` 统一为官方 frontmatter 规范推荐的 `[...]` 方括号写法（approve / reject / review / init）。
-- `plugin.json` keywords 调整：泛化的 `agent` 换为 `agent-pipeline`、`code-review` 等功能类关键词。
-- `hooks/hooks.json` 钩子命令的 `${CLAUDE_PLUGIN_ROOT}` 路径加引号，防安装路径含空格时失效。
-- **脚本内聚迁移（skill 自包含，官方 skill-development 范式）**：skill 专属脚本住进各自 skill 的 `scripts/`——`validate-handoff.js` → `skills/context-handoff/scripts/`、`sdlc-state.js` → `skills/baseline-gate/scripts/`；hook 实现脚本 `gate-check.js` 按惯例留在 `hooks/scripts/`。全部引用点（hooks.json、4 个命令、4 个 agent、2 个 skill、README、tests）同步替换，顶层 `scripts/` 目录撤销。
-- **定稿协议单一源化**（mattpocock「每个含义只留一个真相源」原则）：四阶段定稿流程（矩阵回填→交接块→机器校验）收进 `skills/context-handoff/SKILL.md`「定稿协议」节为唯一源，四个阶段 agent 的定稿步骤压缩为带本阶段参数的指针引用——此后修改定稿流程只需改一个文件。
-- **编排/交互双档义务**（mattpocock「branch」原则：共用核心、路径专属内容按路径加载）：以 `.sdlc/pipeline-state.json` 存在与否为信号（与门禁同一信号）。编排模式=全套义务（交接块必须 + code-handoff 文档必须 + 机器校验强制）；交互模式=轻量义务（矩阵与阶段文档必须，交接块建议不强制，reviewer 有块才复检）。先交互后转编排时，所缺交接块经 `/review` 补写复检。
-- **agent no-op 修剪**（mattpocock 逐句 no-op 测试）：删除五个 agent 中与同文件工作流步骤或 pipeline-overview 硬约束重复、不改变模型行为的句子——requirements-analyst 与 tester 的「禁止事项」整节删除（每条均已被覆盖），architect 与 developer 的禁止事项压缩并改写为正面完成标准。
+- `commands/` 整个目录（9 个文件）——官方：commands/ 是遗留格式。
+- v0.2.0 的 `skills/design/`、`skills/code/`、`skills/test/`（model-invoked 版本）——内容回到 agent，阶段入口改为 user-invoked skill 派发 agent。
 
-### Fixed
+## [0.2.0] - 2026-07-23
 
-- **全局异常处理模板的 `Exception.class` 兜底陷阱**（e2e 闭环验证发现的 P0，根因在模板自身）：`GlobalExceptionHandler.java.template` 改为继承 `ResponseEntityExceptionHandler` 的正统范式——Spring MVC 标准异常（405/404/400 等）由父类按正确 HTTP 状态处理，兜底 handler 经 `ResponseEntity` 显式返回 HTTP 500；原模板的裸 `@ExceptionHandler(Exception.class)` 会把协议异常捕获并改写为 HTTP 200（body code=500），使生成的代码天然违反 405/404 接口契约且令监控误判。`rules/spring.md` 全局异常处理节同步新范式，并新增 Controller 协议边缘测试约定（真实 HTTP 请求断言 405/404）。
+### Changed（架构重构 v2：skill 优先，已被 v3 取代）
 
-### Changed (e2e 反馈)
-
-- **developer 自检清单新增测试纪律**：本机可运行时实际执行一遍已有单元测试（`mvn test` / `npm test` 等）并要求零失败，不可运行则在交接文档显式注明；Controller 测试骨架必须含协议边缘状态（405/404）端到端断言。上述 P0 若在 developer 自检阶段跑过测试骨架即可提前一阶段发现。
+- 删除 4 个伪子代理与 5 个薄命令，新增 6 个 skill。（此版本的架构决策在 v3 中基于官方文档重新修正。）
 
 ## [0.1.0] - 2026-07-22
 
 ### Added
 
-- 需求分析 → 设计 → 编码 → 测试四阶段闭环流水线：5 个子代理角色（requirements-analyst / architect / developer / tester / reviewer 守门人）。
-- **确定性阶段门禁** `hooks/scripts/gate-check.js`（PreToolUse，matcher `Task|Agent` 兼容新旧两代子代理工具名）：前置阶段未经用户确认即阻断对下一阶段子代理的调用；状态文件不存在视为非编排模式不干预，状态损坏即阻断。
-- 状态管理 `scripts/sdlc-state.js`（init / confirm / revoke / status / reset）：含覆写保护（默认不覆盖已有状态，`--force` 强制）、init 时从模板初始化追溯矩阵。
-- 9 个斜杠命令：`/init` `/requirement` `/design` `/code` `/test` `/review` `/approve` `/reject` `/pipeline`。
-- 6 个共享 skill：`pipeline-overview`（总控路由表 + 硬性约束，规则唯一源）、`baseline-gate`、`context-handoff`、`requirement-clarification`、`review-checklist`、`traceability-matrix`。
-- 技术栈规约 `rules/`：java / spring / vue / existing-framework，按「新增文件 + 路由表加一行」方式可扩展新技术栈。
-- 文档与代码模板 `templates/`：需求规格 / 设计说明书 / 测试计划 / 追溯矩阵模板与 Java/Spring/Vue 代码骨架。
-- marketplace 清单（支持 `/plugin marketplace add`）。
+- 需求分析 → 设计 → 编码 → 测试四阶段闭环流水线：5 个子代理角色。
+- 确定性阶段门禁 `hooks/scripts/gate-check.js`。
+- 状态管理 `scripts/sdlc-state.js`。
+- 9 个斜杠命令、6 个共享 skill、技术栈规约 `rules/`、文档与代码模板 `templates/`。
+- marketplace 清单。

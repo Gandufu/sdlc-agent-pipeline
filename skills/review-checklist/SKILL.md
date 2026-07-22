@@ -40,4 +40,4 @@ description: 分阶段完整性评审清单。当 reviewer agent 对任一阶段
 ## 评审结论
 
 - **通过** → 给出「通过」结论；随后由用户执行 `/approve <phase>` 落确认态。
-- **退回** → 逐条列出不通过项，按退回协议处理（见 `${CLAUDE_PLUGIN_ROOT}/skills/baseline-gate/SKILL.md` 的「退回协议」一节）。
+- **退回** → 逐条列出不通过项，按退回协议处理（见 `${CLAUDE_PLUGIN_ROOT}/skills/baseline-gate/SKILL.md` 的「退回协议」一节），把清单交回该阶段责任 skill 重做。

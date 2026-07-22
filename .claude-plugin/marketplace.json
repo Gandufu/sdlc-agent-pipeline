@@ -7,10 +7,10 @@
     {
       "name": "sdlc-agent-pipeline",
       "source": "./",
-      "description": "需求分析-设计-编码-测试四阶段闭环AI研发流水线插件，阶段间确定性门禁、按技术栈可扩展规则、支持交互与编排两种模式",
-      "version": "0.1.0",
+      "description": "需求分析-设计-编码-测试四阶段闭环AI研发流水线插件，阶段间确定性门禁、技术栈脚手架初始化、按技术栈可扩展规则、支持交互与编排两种模式",
+      "version": "0.3.0",
       "category": "engineering",
-      "tags": ["sdlc", "workflow", "requirements", "code-review"]
+      "tags": ["sdlc", "workflow", "requirements", "code-review", "scaffold"]
     }
   ]
 }

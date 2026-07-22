@@ -2,8 +2,8 @@
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "claude-code-setup@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": false,
     "plugin-dev@claude-plugins-official": true,
-    "mattpocock-skills@mattpocock": true
+    "mattpocock-skills@mattpocock": false
   }
 }

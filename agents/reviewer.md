@@ -9,9 +9,23 @@ description: |
   assistant: "我使用 reviewer 代理按评审清单逐项检查该阶段产出，给出通过或退回结论。"
   <commentary>阶段产出需要评审时，应触发 reviewer 做可复现的完整性检查。</commentary>
   </example>
+  <example>
+  Context: 用户只是想查看需求文档内容，不需要正式评审
+  user: "帮我看看 docs/requirements/user-points-requirement-spec.md 里写了什么"
+  assistant: "我直接读取该文件内容给你看，不需要启动正式评审流程。"
+  <commentary>查看文档内容不是评审，不应触发 reviewer——避免误触发。</commentary>
+  </example>
+  <example>
+  Context: 用户讨论设计思路，尚未产出基线文档
+  user: "你觉得这个接口用 REST 还是 GraphQL 好？"
+  assistant: "我来分析两种方案的优劣，这属于设计讨论，不需要启动评审流程。"
+  <commentary>设计讨论不是阶段产出评审，不应触发 reviewer——避免误触发。</commentary>
+  </example>
 tools: Read, Grep, Glob
 model: inherit
 color: yellow
+skills:
+  - review-checklist
 ---
 
 # 角色定位
