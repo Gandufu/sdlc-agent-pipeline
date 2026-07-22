@@ -34,19 +34,9 @@ color: blue
    - 每个需求条目必须包含：描述、优先级（P0/P1/P2）、验收标准（可测试的明确断言）、非功能性约束（如适用）。
    - 输出路径（用户项目内）：`docs/requirements/<feature-slug>-requirement-spec.md`。
 
-4. **登记追溯矩阵**
-   - 在用户项目的 `docs/traceability-matrix.md` 中为每个 REQ-xxx 新增一行，设计/代码/测试列先留空，等待后续阶段回填（维护规则见 `${CLAUDE_PLUGIN_ROOT}/skills/traceability-matrix/SKILL.md`）。
+4. **定稿（矩阵回填 + 交接块 + 校验）**
+   - 执行 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 的**定稿协议**（流程唯一源；以下仅为本阶段参数）：stage=requirement；基线文档=`docs/requirements/<feature-slug>-requirement-spec.md`；矩阵=为每个 REQ-xxx 新增一行（设计/代码/测试列留空待后续阶段）；items=全部 REQ 编号与关键约束。
 
-5. **追加交接块**
-   - 定稿时按 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 在基线文档末尾追加机器可读的 stage-handoff 块（stage: requirement，items 列全部 REQ 编号与关键约束，matrix_updated 按实际填写）。
-   - 追加后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" docs/requirements/<feature-slug>-requirement-spec.md`。失败则按 stderr 列出的问题修正后重跑——定稿以脚本结果为准，不以"我认为已写好"为准。
-
-6. **移交前确认**
+5. **移交前确认**
    - 完成后，明确告知用户："需求规格已产出，请确认 REQ 编号与验收标准是否准确，确认后可进入设计阶段（/design）。"
    - **不要**擅自继续调用设计阶段——这是强制门禁点，见 `${CLAUDE_PLUGIN_ROOT}/skills/pipeline-overview/SKILL.md` 硬约束 #1。
-
-# 禁止事项
-
-- 不生成任何设计方案或代码。
-- 不假设未声明的非功能性需求（如未提及并发量，不要编造具体数字，而是标注"待确认"）。
-- 不重复定义 `${CLAUDE_PLUGIN_ROOT}/rules/existing-framework.md` 中已有的能力为新需求。

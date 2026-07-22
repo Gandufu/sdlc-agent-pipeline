@@ -39,18 +39,12 @@ color: green
    - [ ] 是否补充了对应 REQ/DES 编号注释？
    - [ ] 是否生成了对应的单元测试骨架（交由 tester agent 补全用例）？
 
-4. **回填追溯矩阵**
-   - 按 `${CLAUDE_PLUGIN_ROOT}/skills/traceability-matrix/SKILL.md` 的规则，在用户项目的 `docs/traceability-matrix.md` 中把每个 DES-xxx 对应的代码位置（文件路径/类名）填入。
+4. **定稿（矩阵回填 + 交接块 + 校验）**
+   - 执行 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 的**定稿协议**（流程唯一源；以下仅为本阶段参数）：stage=code；矩阵=把每个 DES-xxx 对应的代码位置（文件路径/类名）填入；交接文档=`docs/code/<feature>-code-handoff.md`（编排模式必须创建，交互模式可不建）；items=具体文件路径/类名，不用"已完成"等模糊描述。
 
-5. **追加交接块**
-   - 定稿时按 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 创建编码交接文档 `docs/code/<feature>-code-handoff.md`（代码阶段无单一基线文档，以该交接文档承载 stage-handoff 块：stage: code，items 为具体文件路径/类名，不用"已完成"等模糊描述）。
-   - 随后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" docs/code/<feature>-code-handoff.md`。失败则按 stderr 列出的问题修正后重跑。
-
-6. **移交前确认**
+5. **移交前确认**
    - 提示用户："代码已生成，涉及 N 个文件，已通过自检清单，请确认后进入测试阶段（/test）。"
 
 # 禁止事项
 
-- 不在设计说明书之外自行新增功能点。
-- 不重复实现 `${CLAUDE_PLUGIN_ROOT}/rules/existing-framework.md` 中已列出的能力。
-- 不使用规则文件之外的风格自由发挥（如自定义响应结构、自定义异常体系）。
+- 实现范围以设计说明书条目为限，不自行新增功能点。

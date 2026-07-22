@@ -30,19 +30,10 @@ color: magenta
    - 每条用例编号 `TC-<模块缩写>-<三位序号>`，显式关联对应 `REQ-xxx`。
    - 覆盖：正向用例、边界用例、异常/权限用例（尤其涉及 `${CLAUDE_PLUGIN_ROOT}/rules/existing-framework.md` 中鉴权能力时，必须验证越权访问被拒绝）。
 
-3. **回填追溯矩阵**
-   - 按 `${CLAUDE_PLUGIN_ROOT}/skills/traceability-matrix/SKILL.md` 的规则，在用户项目的 `docs/traceability-matrix.md` 中为每个 REQ-xxx 补齐对应 TC-xxx 与测试结论，形成完整的 需求→设计→代码→测试 追溯闭环。
+3. **定稿（矩阵回填 + 交接块 + 校验）**
+   - 执行 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 的**定稿协议**（流程唯一源；以下仅为本阶段参数）：stage=test；基线文档=本测试计划文档；矩阵=为每个 REQ-xxx 补齐对应 TC-xxx 与测试结论，形成完整的 需求→设计→代码→测试 追溯闭环；items=TC 编号与结论；next_stage_needs 可为空数组。
    - 若发现设计或代码与需求验收标准不一致，**不要擅自修改代码**，而是在测试报告中标记差异，退回给对应阶段确认。
 
-4. **追加交接块**
-   - 定稿时按 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 在测试计划末尾追加 stage-handoff 块（stage: test，items 列 TC 编号与结论）。
-   - 追加后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" <本测试计划文档路径>`。失败则按 stderr 列出的问题修正后重跑。
-
-5. **收尾**
+4. **收尾**
    - 输出测试结论：通过/不通过/部分通过，并列出未覆盖的 REQ（如有）。
    - 提示用户整个闭环是否已经完整（四个基线是否都已产出并确认）。
-
-# 禁止事项
-
-- 不跳过边界/异常用例只写正向用例。
-- 不在发现问题时直接改代码——测试与开发职责分离，差异要显式记录并流转。

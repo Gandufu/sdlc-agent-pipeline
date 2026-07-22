@@ -12,7 +12,7 @@
 - **skills/** 承载跨角色复用的SOP（追溯矩阵维护、阶段门禁判断等），避免四个agent各写一套。每个 skill 为自包含目录：SKILL.md（精简 SOP）+ 自带 `scripts/`（确定性工具）/`examples/`（可照抄范例），按需加载（渐进式披露）。
 - **templates/** 承载文档模板与代码骨架，保证产出风格统一。
 - 阶段之间**强制人工确认门禁**，由**确定性门禁**执行：`hooks/scripts/gate-check.js`（PreToolUse，matcher `Task|Agent`，新旧两代子代理工具名同时命中）读取状态文件 `.sdlc/pipeline-state.json`，前置阶段未确认就直接阻断对下一阶段 agent 的调用——不依赖模型自觉。确认态经 `/approve <阶段>` 写入，退回态经 `/reject <阶段>` 写入，门禁判断规则见 skills/baseline-gate。不因为"一键跑完"就自动放行——这是有意为之的保守设计。
-- **阶段间结构化交接**（skills/context-handoff）：每阶段产出附带机器可读交接块，供下一阶段读取最小必要上下文，也供编排引擎（Workflow Engine）直接解析。交接块不是君子协定——定稿前由 `skills/context-handoff/scripts/validate-handoff.js` 机器校验（退出码 0 才算定稿），reviewer 评审同脚本复检，各阶段范例见该 skill 的 `examples/`。
+- **阶段间结构化交接**（skills/context-handoff）：每阶段产出附带机器可读交接块，供下一阶段读取最小必要上下文，也供编排引擎（Workflow Engine）直接解析。交接块不是君子协定——**编排模式**（`.sdlc/pipeline-state.json` 存在）强制产出并由 `validate-handoff.js` 机器校验（退出码 0 才算定稿），reviewer 同脚本复检；**交互模式**建议不强制，保持流程轻量。定稿协议（矩阵回填→交接块→校验）收在该 skill 内唯一源，四阶段 agent 引用它；各阶段范例见 `examples/`。
 - **会话启动即知进度**：SessionStart 钩子每次会话启动自动注入当前流水线状态（feature、各阶段确认情况、下一步建议），详见下文「门禁与状态机制」。
 - **过程沉淀到文件，不依赖对话上下文**：grill 澄清结论增量落入 `docs/requirements/<feature>-clarification-notes.md`，设计取舍逐条登记在设计说明书「关键决策」节——上下文压缩发生时，关键过程信息不丢失。
 

@@ -3,8 +3,8 @@
  * stage-handoff 交接块机器校验（skills/context-handoff 定义的格式）
  *
  * 「evidence over claims」：agent 声称定稿 ≠ 交接块真的合法。本脚本把
- * 交接块的格式约定变成可执行断言——定稿前自检、reviewer 评审复检、
- * 编排引擎解析前校验，都以此脚本结果为准。
+ * 交接块的格式约定变成可执行断言——编排模式定稿自检（强制）、
+ * reviewer 评审复检（块存在即复检）、编排引擎解析前校验，均以此脚本结果为准。
  *
  * 用法：
  *   node validate-handoff.js <基线文档路径>

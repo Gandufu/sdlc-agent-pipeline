@@ -9,7 +9,7 @@ description: 分阶段完整性评审清单。当 reviewer agent 对任一阶段
 
 - [ ] 产出存在且非空，路径符合约定：需求/设计/测试阶段为 `docs/requirements|design|test/` 下的基线文档；编码阶段为代码本身 + `docs/code/<feature>-code-handoff.md`。
 - [ ] 追溯矩阵（用户项目 `docs/traceability-matrix.md`）对应列已回填（见 `${CLAUDE_PLUGIN_ROOT}/skills/traceability-matrix/SKILL.md`），无空列且未标注原因。
-- [ ] 交接块通过机器校验：运行 `node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" <基线文档路径>` 退出码为 0（块存在、字段完整、`matrix_updated: true`、items 编号前缀符合阶段约定）；校验失败即判退回，格式见 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md`。
+- [ ] 交接块（模式判定与门禁同一信号：`.sdlc/pipeline-state.json` 存在为编排模式）：**编排模式**下必须存在且通过机器校验（运行 `node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" <基线文档路径>` 退出码为 0：块存在、字段完整、`matrix_updated: true`、items 编号前缀符合阶段约定），校验失败即判退回；**交互模式**下块存在则同法复检、不存在则跳过本项。格式见 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 定稿协议。
 - [ ] 编号唯一、无复用（REQ/DES/TC 各自不重复）。
 
 ## 需求阶段

@@ -41,4 +41,4 @@ description: 需求澄清与追问的标准操作流程。当 requirements-analy
 - 每个 `REQ-xxx` 都有可转化为测试断言的验收标准。
 - 非功能性要求要么有明确取值，要么显式标注「待确认」——**禁止编造具体数字**。
 - 与已有框架能力、历史需求无未解决冲突。
-- 未决问题已写入交接块 `open_questions`（见 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md`）。
+- 未决问题已显式列出（编排模式追加交接块时写入其 `open_questions`，见 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 定稿协议）。

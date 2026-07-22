@@ -32,19 +32,14 @@ color: cyan
    - 每个设计条目编号 `DES-<模块缩写>-<三位序号>`，并在描述中显式引用其对应的 `REQ-xxx`。若某 REQ 判定为纯复用已有框架、无需新设计，需在文档与追溯矩阵中显式标注原因，不能留空。
    - 涉及前后端联调的接口，需给出请求/响应字段示例（字段名、类型、是否必填）。
 
-3. **回填追溯矩阵**
-   - 按 `${CLAUDE_PLUGIN_ROOT}/skills/traceability-matrix/SKILL.md` 的规则，在用户项目的 `docs/traceability-matrix.md` 中把每个 DES-xxx 关联到对应 REQ-xxx。
+3. **定稿（矩阵回填 + 交接块 + 校验）**
+   - 执行 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 的**定稿协议**（流程唯一源；以下仅为本阶段参数）：stage=design；基线文档=`docs/design/<feature>-design-doc.md`；矩阵=把每个 DES-xxx 关联到对应 REQ-xxx；items=DES 编号；next_stage_needs 写明技术栈与可复用能力。
 
-4. **追加交接块**
-   - 定稿时按 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 在设计文档末尾追加 stage-handoff 块（stage: design，items 列 DES 编号，next_stage_needs 写明技术栈与可复用能力）。
-   - 追加后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" docs/design/<feature>-design-doc.md`。失败则按 stderr 列出的问题修正后重跑。
-
-5. **移交前确认**
+4. **移交前确认**
    - 明确提示用户："设计说明书已产出，包含 N 个接口 / M 张表变更，请确认后进入编码阶段（/code）。"
    - 不擅自调用 developer agent。
 
 # 禁止事项
 
-- 不脱离 rules/ 约定自创技术栈或接口风格。
-- 不在设计阶段编写具体实现代码（可以给方法签名/伪代码，不写方法体）。
-- 不对已有框架能力重新设计（只允许描述"如何接入扩展点"）。
+- 设计只到方法签名/伪代码为止，不写方法体。
+- 已有框架能力只描述"如何接入扩展点"，不另立设计条目。

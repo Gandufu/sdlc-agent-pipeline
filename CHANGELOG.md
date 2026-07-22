@@ -24,6 +24,9 @@
 - `plugin.json` keywords 调整：泛化的 `agent` 换为 `agent-pipeline`、`code-review` 等功能类关键词。
 - `hooks/hooks.json` 钩子命令的 `${CLAUDE_PLUGIN_ROOT}` 路径加引号，防安装路径含空格时失效。
 - **脚本内聚迁移（skill 自包含，官方 skill-development 范式）**：skill 专属脚本住进各自 skill 的 `scripts/`——`validate-handoff.js` → `skills/context-handoff/scripts/`、`sdlc-state.js` → `skills/baseline-gate/scripts/`；hook 实现脚本 `gate-check.js` 按惯例留在 `hooks/scripts/`。全部引用点（hooks.json、4 个命令、4 个 agent、2 个 skill、README、tests）同步替换，顶层 `scripts/` 目录撤销。
+- **定稿协议单一源化**（mattpocock「每个含义只留一个真相源」原则）：四阶段定稿流程（矩阵回填→交接块→机器校验）收进 `skills/context-handoff/SKILL.md`「定稿协议」节为唯一源，四个阶段 agent 的定稿步骤压缩为带本阶段参数的指针引用——此后修改定稿流程只需改一个文件。
+- **编排/交互双档义务**（mattpocock「branch」原则：共用核心、路径专属内容按路径加载）：以 `.sdlc/pipeline-state.json` 存在与否为信号（与门禁同一信号）。编排模式=全套义务（交接块必须 + code-handoff 文档必须 + 机器校验强制）；交互模式=轻量义务（矩阵与阶段文档必须，交接块建议不强制，reviewer 有块才复检）。先交互后转编排时，所缺交接块经 `/review` 补写复检。
+- **agent no-op 修剪**（mattpocock 逐句 no-op 测试）：删除五个 agent 中与同文件工作流步骤或 pipeline-overview 硬约束重复、不改变模型行为的句子——requirements-analyst 与 tester 的「禁止事项」整节删除（每条均已被覆盖），architect 与 developer 的禁止事项压缩并改写为正面完成标准。
 
 ## [0.1.0] - 2026-07-22
 
