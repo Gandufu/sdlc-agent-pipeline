@@ -1,0 +1,27 @@
+package com.<company>.<project>.common;
+
+import lombok.Data;
+
+// 统一响应体，所有Controller方法必须返回本类型（见 rules/spring.md）
+@Data
+public class ApiResponse<T> {
+
+    private int code;      // 0 表示成功，非0为业务错误码
+    private String message;
+    private T data;
+
+    public static <T> ApiResponse<T> success(T data) {
+        ApiResponse<T> resp = new ApiResponse<>();
+        resp.setCode(0);
+        resp.setMessage("success");
+        resp.setData(data);
+        return resp;
+    }
+
+    public static <T> ApiResponse<T> fail(int code, String message) {
+        ApiResponse<T> resp = new ApiResponse<>();
+        resp.setCode(code);
+        resp.setMessage(message);
+        return resp;
+    }
+}

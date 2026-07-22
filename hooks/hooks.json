@@ -1,0 +1,17 @@
+{
+  "description": "SDLC 流水线阶段门禁（PreToolUse，matcher: Task|Agent —— Task 为旧版工具名、Agent 为现名，两者同时命中以兼容不同 Claude Code 版本）。在调用下一阶段子代理前做确定性检查：前一阶段未经用户确认则阻断。状态文件 .sdlc/pipeline-state.json 不存在时视为非编排模式，不干预。规则见 skills/baseline-gate。",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Task|Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/gate-check.js",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

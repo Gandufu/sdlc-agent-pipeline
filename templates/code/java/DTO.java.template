@@ -1,0 +1,16 @@
+package com.<company>.<project>.<module>.dto;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import lombok.Data;
+
+// 接口入参对象，字段需与 design-doc.md 中 DES-XXX-001 的请求参数表一致
+@Data
+public class <Feature>DTO {
+
+    @NotBlank(message = "名称不能为空")
+    @Size(max = 64, message = "名称长度不能超过64")
+    private String name;
+
+    // ... 其余字段
+}

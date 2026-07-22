@@ -1,0 +1,9 @@
+{
+  "name": "sdlc-agent-pipeline",
+  "version": "0.1.0",
+  "description": "需求分析-设计-编码-测试四阶段闭环AI研发流水线插件，支持按技术栈扩展规则、与已有基础框架集成",
+  "author": {
+    "name": "Gandaofu"
+  },
+  "keywords": ["sdlc", "agent", "requirements", "design", "coding", "testing", "java", "spring", "vue"]
+}

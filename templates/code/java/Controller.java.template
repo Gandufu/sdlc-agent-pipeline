@@ -1,0 +1,36 @@
+package com.<company>.<project>.<module>.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
+
+// 对应设计: DES-XXX-001 / 需求: REQ-XXX-001
+@RestController
+@RequestMapping("/api/<module>")
+@Validated
+public class <Feature>Controller {
+
+    @Autowired
+    private <Feature>Service <feature>Service;
+
+    /**
+     * 创建<资源>
+     * 对应设计: DES-XXX-001
+     */
+    @PostMapping("/<resources>")
+    public ApiResponse<<Feature>VO> create(@RequestBody @Valid <Feature>DTO dto) {
+        // Controller 只做编排：参数校验交给 @Valid + 全局异常处理（见 rules/spring.md），不写业务逻辑
+        <Feature>VO result = <feature>Service.create(dto);
+        return ApiResponse.success(result);
+    }
+
+    /**
+     * 查询<资源>详情
+     * 对应设计: DES-XXX-002
+     */
+    @GetMapping("/<resources>/{id}")
+    public ApiResponse<<Feature>VO> getById(@PathVariable Long id) {
+        return ApiResponse.success(<feature>Service.getById(id));
+    }
+}

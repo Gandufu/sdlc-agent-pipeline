@@ -1,0 +1,19 @@
+// api/<module>.js —— 接口封装层，见 rules/vue.md：组件禁止直接写 axios
+import request from '@/utils/request' // 复用已有框架的axios实例（含统一响应拦截，见 rules/existing-framework.md）
+
+// 对应设计: DES-XXX-001 / 需求: REQ-XXX-001
+export function createFeature(data) {
+  return request({
+    url: '/api/<module>/<resources>',
+    method: 'post',
+    data
+  })
+}
+
+// 对应设计: DES-XXX-002
+export function fetchFeatureById(id) {
+  return request({
+    url: `/api/<module>/<resources>/${id}`,
+    method: 'get'
+  })
+}

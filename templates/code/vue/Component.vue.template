@@ -1,0 +1,21 @@
+<template>
+  <div class="<feature>-page">
+    <!-- 权限控制的按钮统一复用已有框架的权限指令，例如 v-permission="'xxx:create'" -->
+    <el-button v-permission="'<module>:create'" @click="handleCreate">新增</el-button>
+    <!-- 列表/表单内容 -->
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { createFeature, fetchFeatureById } from '@/api/<module>'
+
+// 对应设计: DES-XXX-001 / 需求: REQ-XXX-001
+const formData = ref({})
+
+async function handleCreate() {
+  // 组件只做交互编排，不直接调用axios（见 rules/vue.md）
+  const res = await createFeature(formData.value)
+  // 统一响应体已在 api 层/拦截器处理 code 非0的情况
+}
+</script>

@@ -1,0 +1,45 @@
+package com.<company>.<project>.<module>.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class <Feature>ServiceImpl implements <Feature>Service {
+
+    @Autowired
+    private <Feature>Mapper <feature>Mapper;
+
+    // 对应设计: DES-XXX-001 / 需求: REQ-XXX-001
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public <Feature>VO create(<Feature>DTO dto) {
+        // 1. 参数/业务规则校验（不满足则 throw BusinessException，见 rules/spring.md）
+        // 2. 若涉及已有框架能力（鉴权/权限/字典等），复用 rules/existing-framework.md 中的扩展点，不重新实现
+        // 3. 落库
+        <Feature>Entity entity = new <Feature>Entity();
+        // ... 字段映射
+        <feature>Mapper.insert(entity);
+
+        log.info("[<Feature>][创建] 操作人={} 对象={} 结果={}", "TODO:当前用户", entity.getId(), "成功");
+
+        return toVO(entity);
+    }
+
+    @Override
+    public <Feature>VO getById(Long id) {
+        <Feature>Entity entity = <feature>Mapper.selectById(id);
+        if (entity == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND, "<Feature>不存在");
+        }
+        return toVO(entity);
+    }
+
+    private <Feature>VO toVO(<Feature>Entity entity) {
+        // 字段映射，或使用 MapStruct
+        <Feature>VO vo = new <Feature>VO();
+        return vo;
+    }
+}

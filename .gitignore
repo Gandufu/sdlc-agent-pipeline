@@ -1,0 +1,15 @@
+# 依赖
+node_modules/
+
+# 机器本地的 Claude Code 配置（不入库）
+.claude/settings.local.json
+
+# 运行时流水线状态（生成于使用方项目 / 本地测试，不入库）
+.sdlc/
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 日志与临时文件
+*.log

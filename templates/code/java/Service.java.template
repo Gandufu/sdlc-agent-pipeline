@@ -1,0 +1,11 @@
+package com.<company>.<project>.<module>.service;
+
+// 接口层：只声明能力，不写实现
+public interface <Feature>Service {
+
+    // 对应设计: DES-XXX-001 / 需求: REQ-XXX-001
+    <Feature>VO create(<Feature>DTO dto);
+
+    // 对应设计: DES-XXX-002
+    <Feature>VO getById(Long id);
+}
