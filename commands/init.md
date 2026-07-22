@@ -1,6 +1,6 @@
 ---
 description: 流水线初始化：读入既有需求文档（或描述）→ grill 式逐轮澄清 → 按模板定稿需求规格说明书并进入编排模式
-argument-hint: <需求文档路径 或 需求描述>
+argument-hint: [需求文档路径 或 需求描述]
 allowed-tools: Bash(node *sdlc-state.js*)
 ---
 

@@ -1,8 +1,17 @@
 ---
 name: tester
-description: 测试工程师。基于需求验收标准与设计接口定义，产出测试计划与测试用例，并回填需求-设计-代码-测试追溯矩阵。在代码实现确认完成后使用。
+description: |
+  测试工程师。基于需求验收标准与设计接口定义，产出测试计划与测试用例，并回填需求-设计-代码-测试追溯矩阵。在代码实现确认完成后使用。
+
+  <example>
+  Context: 代码实现已经用户确认（/approve code），准备进入测试阶段
+  user: "代码完成了，出测试计划和用例吧。"
+  assistant: "我使用 tester 代理基于验收标准与接口定义产出测试计划，并回填追溯矩阵。"
+  <commentary>编码基线已确认，应触发 tester 进入测试阶段。</commentary>
+  </example>
 tools: Read, Write, Bash, Grep, Glob
 model: inherit
+color: magenta
 ---
 
 # 角色定位

@@ -10,7 +10,8 @@
  *                                                默认不覆盖已有状态文件（避免误清已确认阶段），--force 强制覆盖
  *   node sdlc-state.js confirm <phase>    确认某阶段（phase: requirement|design|code|test），开启后续门禁
  *   node sdlc-state.js revoke <phase>     撤销某阶段确认并标记为 returned（reviewer 退回时使用）
- *   node sdlc-state.js status             查看当前状态
+ *   node sdlc-state.js status [--brief]   查看当前状态；--brief 输出供 SessionStart 钩子注入上下文的简略块：
+ *                                         无状态时不输出（不干扰非编排模式），状态损坏时输出警告但不报错退出
  *   node sdlc-state.js reset              删除状态文件（退出编排模式，门禁回到不干预）
  *
  * init 时会顺带把追溯矩阵模板初始化到用户项目 docs/traceability-matrix.md（已存在则跳过）。
@@ -21,6 +22,8 @@ const fs = require('fs');
 const path = require('path');
 
 const PHASES = ['requirement', 'design', 'code', 'test'];
+// 阶段 -> 对应斜杠命令（--brief 的「下一步建议」用）
+const PHASE_CMD = { requirement: '/requirement', design: '/design', code: '/code', test: '/test' };
 const PROJECT_DIR = process.env.CLAUDE_PROJECT_DIR || process.cwd();
 const SDLC_DIR = path.join(PROJECT_DIR, '.sdlc');
 const STATE_FILE = path.join(SDLC_DIR, 'pipeline-state.json');
@@ -31,7 +34,8 @@ const MATRIX_TEMPLATE = path.join(__dirname, '..', 'templates', 'docs', 'traceab
 const cliArgs = process.argv.slice(2);
 const cmd = cliArgs[0];
 const force = cliArgs.includes('--force');
-const arg = cliArgs.slice(1).filter((a) => a !== '--force')[0];
+const brief = cliArgs.includes('--brief');
+const arg = cliArgs.slice(1).filter((a) => a !== '--force' && a !== '--brief')[0];
 
 function load() {
   if (!fs.existsSync(STATE_FILE)) return null;
@@ -71,6 +75,32 @@ function blankState(feature) {
   const phases = {};
   for (const p of PHASES) phases[p] = { status: 'pending' };
   return { feature, started_at: new Date().toISOString(), phases };
+}
+
+// SessionStart 钩子注入用的简略状态块（stdout 会被加入会话上下文）：
+// 各阶段一行 + 下一步建议，供 Claude 在会话开始即知道流水线进度
+function briefStatus(state) {
+  const phases = state.phases || {};
+  const date = (s) => (s ? ` (${String(s).slice(0, 10)})` : '');
+  const lines = [`[SDLC 流水线] feature=${state.feature || 'default'}${date(state.started_at)}`];
+  let next = null;
+  for (const p of PHASES) {
+    const ph = phases[p] || {};
+    const st = ph.status || 'pending';
+    let mark = 'pending';
+    if (st === 'confirmed') mark = `confirmed ✓${date(ph.confirmed_at)}`;
+    else if (st === 'returned') mark = 'returned ✗（已退回，待重做）';
+    if (!next && st !== 'confirmed') next = { p, st };
+    lines.push(`- ${p}: ${mark}${next && next.p === p ? '  ← 当前' : ''}`);
+  }
+  if (!next) {
+    lines.push('状态：四阶段均已确认，本 feature 流水线闭环完成。开始新 feature 请先 reset 再 init。');
+  } else if (next.st === 'returned') {
+    lines.push(`下一步：阶段 ${next.p} 已被退回——按评审清单重做其产出，完成后经用户确认执行 /approve ${next.p} 重新写入确认态。`);
+  } else {
+    lines.push(`下一步：执行 ${PHASE_CMD[next.p]} 推进阶段 ${next.p}；产出完成后经用户确认，执行 /approve ${next.p} 写入确认态再进入后续阶段。`);
+  }
+  return lines.join('\n');
 }
 
 function assertPhase(phase) {
@@ -118,6 +148,23 @@ switch (cmd) {
     break;
   }
   case 'status': {
+    if (brief) {
+      // SessionStart 钩子模式：无状态不输出（不干扰非编排模式会话）；
+      // 状态损坏时输出警告但 exit 0——不能因状态文件问题阻塞会话启动（与 gate-check.js 的「损坏即阻断工具调用」分工不同）
+      if (!fs.existsSync(STATE_FILE)) break;
+      let state;
+      try {
+        state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+      } catch (e) {
+        console.log(
+          `[SDLC 流水线] 警告：状态文件已损坏（${e.message}），阶段门禁会阻断全部阶段子代理调用。` +
+            `请修复 ${STATE_FILE}，或执行 node sdlc-state.js reset 清除后重新 /pipeline 初始化。`
+        );
+        break;
+      }
+      console.log(briefStatus(state));
+      break;
+    }
     const state = load();
     if (!state) {
       console.log('[sdlc-state] 无流水线状态（当前为非编排模式，门禁不干预）。');
@@ -136,7 +183,7 @@ switch (cmd) {
       '用法: node sdlc-state.js <init|confirm|revoke|status|reset> [arg]\n' +
         '       init <feature> [--force]   初始化（四阶段 pending），进入编排模式；默认不覆盖已有状态\n' +
         '       confirm|revoke <phase>     phase: requirement|design|code|test\n' +
-        '       status                     查看当前状态\n' +
+        '       status [--brief]           查看当前状态；--brief 为 SessionStart 钩子注入用的简略输出\n' +
         '       reset                      删除状态文件（退出编排模式，门禁不干预）'
     );
     process.exit(1);

@@ -1,6 +1,6 @@
 ---
 description: 退回某阶段、撤销其门禁确认态（reviewer 判定退回时使用）
-argument-hint: <requirement|design|code|test>
+argument-hint: [requirement|design|code|test]
 allowed-tools: Bash(node *sdlc-state.js*)
 ---
 

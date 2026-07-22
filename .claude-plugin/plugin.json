@@ -5,5 +5,6 @@
   "author": {
     "name": "Gandaofu"
   },
-  "keywords": ["sdlc", "agent", "requirements", "design", "coding", "testing", "java", "spring", "vue"]
+  "license": "MIT",
+  "keywords": ["sdlc", "agent-pipeline", "requirements", "design", "coding", "testing", "code-review", "java", "spring", "vue"]
 }

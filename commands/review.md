@@ -1,6 +1,6 @@
 ---
 description: 触发评审守门人，对某阶段产出做完整性检查，给出通过/退回结论
-argument-hint: <requirement|design|code|test> [产出文档路径]
+argument-hint: [requirement|design|code|test] [产出文档路径]
 ---
 
 请调用 `reviewer` 子代理（定义见 `${CLAUDE_PLUGIN_ROOT}/agents/reviewer.md`），对阶段 “$ARGUMENTS” 的产出做完整性检查：

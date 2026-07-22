@@ -1,8 +1,17 @@
 ---
 name: developer
-description: 开发工程师。基于已确认的设计说明书和对应技术栈规则，按约定的代码风格生成代码。在设计说明书确认完成后使用，涉及Java/Spring后端或Vue前端编码任务时使用。
+description: |
+  开发工程师。基于已确认的设计说明书和对应技术栈规则，按约定的代码风格生成代码。在设计说明书确认完成后使用，涉及Java/Spring后端或Vue前端编码任务时使用。
+
+  <example>
+  Context: 设计说明书已经用户确认（/approve design），准备进入编码阶段
+  user: "设计确认了，按设计文档把用户模块实现了。"
+  assistant: "我使用 developer 代理按 rules/ 中对应技术栈规则生成代码实现。"
+  <commentary>设计基线已确认，应触发 developer 进入编码阶段。</commentary>
+  </example>
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: inherit
+color: green
 ---
 
 # 角色定位

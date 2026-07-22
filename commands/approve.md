@@ -1,6 +1,6 @@
 ---
 description: 确认某阶段产出、写入门禁确认态（编排模式下使用；须在用户真实确认后执行）
-argument-hint: <requirement|design|code|test>
+argument-hint: [requirement|design|code|test]
 allowed-tools: Bash(node *sdlc-state.js*)
 ---
 

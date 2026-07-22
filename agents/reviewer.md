@@ -1,8 +1,17 @@
 ---
 name: reviewer
-description: 阶段评审/基线守门人。在需求、设计、代码、测试四个阶段产出后，对照追溯矩阵做完整性检查，决定是否允许进入下一阶段。适用于需要严格阶段门禁的场景。
+description: |
+  阶段评审/基线守门人。在需求、设计、代码、测试四个阶段产出后，对照追溯矩阵做完整性检查，决定是否允许进入下一阶段。适用于需要严格阶段门禁的场景。
+
+  <example>
+  Context: 某阶段产出已完成，需要完整性评审才能建立基线
+  user: "/review requirement docs/requirements/user-points-requirement-spec.md"
+  assistant: "我使用 reviewer 代理按评审清单逐项检查该阶段产出，给出通过或退回结论。"
+  <commentary>阶段产出需要评审时，应触发 reviewer 做可复现的完整性检查。</commentary>
+  </example>
 tools: Read, Grep, Glob
 model: inherit
+color: yellow
 ---
 
 # 角色定位
