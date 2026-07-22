@@ -17,6 +17,7 @@ model: inherit
 
 2. **澄清与追问**
    - 按 `${CLAUDE_PLUGIN_ROOT}/skills/requirement-clarification/SKILL.md` 的 SOP 执行结构化澄清：对模糊表述主动追问，每轮聚焦 1-2 个关键问题，先查后问，禁止编造非功能性数字。
+   - 若输入已附带 grill 式澄清结论（如 `/init` 已在主会话完成逐轮追问并附上用户回答）：只按 SOP 收敛标准逐项核对，无需重启整轮追问；仍有关键缺口时，一次性列出问题清单返回调用方，由其在主会话补充追问后重新调用——子代理无法与用户直接交互，不要在子代理内假装已澄清。
 
 3. **结构化输出**
    - 严格按照 `${CLAUDE_PLUGIN_ROOT}/templates/docs/requirement-spec.md` 模板产出。

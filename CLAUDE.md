@@ -4,7 +4,7 @@
 
 ## 使用本流水线
 
-- 唯一加载方式：`/plugin marketplace add <本目录>` 并启用插件，然后使用 `/requirement` `/design` `/code` `/test` `/review` `/approve` `/reject`，或一键 `/pipeline`。
+- 唯一加载方式：`/plugin marketplace add <本目录>` 并启用插件，然后使用 `/init` `/requirement` `/design` `/code` `/test` `/review` `/approve` `/reject`，或一键 `/pipeline`。其中 `/init` 用于把既有需求文档转换为本流水线约定格式（grill 式澄清 + 模板定稿 + 门禁初始化）。
 - 插件根 CLAUDE.md 不会被 Claude Code 自动加载——规则经 `pipeline-overview` skill 按需加载，这是刻意设计（避免上下文膨胀）。
 - 不支持"复制到项目 `.claude/` 下"的安装方式：那样门禁钩子不会被注册，硬约束 #1 将静默失效。详见 README.md。
 
