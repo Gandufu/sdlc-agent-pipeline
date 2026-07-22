@@ -29,16 +29,16 @@
 
 ## 门禁与状态机制
 
-门禁状态存于**项目目录**的 `.sdlc/pipeline-state.json`（不在插件内），由 `scripts/sdlc-state.js` 管理：
+门禁状态存于**项目目录**的 `.sdlc/pipeline-state.json`（不在插件内），由 `skills/baseline-gate/scripts/sdlc-state.js` 管理：
 
 ```
-node scripts/sdlc-state.js init <feature> [--force]  # 初始化（四阶段 pending），进入编排模式；
+node skills/baseline-gate/scripts/sdlc-state.js init <feature> [--force]  # 初始化（四阶段 pending），进入编排模式；
                                                      # 默认不覆盖已有状态，--force 强制覆盖；
                                                      # 初始化时会顺带从模板生成 docs/traceability-matrix.md
-node scripts/sdlc-state.js confirm <phase>    # 确认某阶段（/approve 写入）
-node scripts/sdlc-state.js revoke <phase>     # 退回某阶段（/reject 写入）
-node scripts/sdlc-state.js status [--brief]   # 查看状态；--brief 输出 SessionStart 钩子注入用的简略块
-node scripts/sdlc-state.js reset              # 重置（退出编排模式，门禁不干预）
+node skills/baseline-gate/scripts/sdlc-state.js confirm <phase>    # 确认某阶段（/approve 写入）
+node skills/baseline-gate/scripts/sdlc-state.js revoke <phase>     # 退回某阶段（/reject 写入）
+node skills/baseline-gate/scripts/sdlc-state.js status [--brief]   # 查看状态；--brief 输出 SessionStart 钩子注入用的简略块
+node skills/baseline-gate/scripts/sdlc-state.js reset              # 重置（退出编排模式，门禁不干预）
 ```
 
 设计要点：
@@ -93,11 +93,11 @@ sdlc-agent-pipeline/
 │   ├── spring.md
 │   ├── vue.md
 │   └── existing-framework.md   ← 需替换为真实内容
-├── skills/
+├── skills/                           # 每个 skill 为目录：SKILL.md + 自带 scripts//examples/（自包含，渐进式披露）
 │   ├── pipeline-overview/SKILL.md    # 总控路由 + 硬约束（规则唯一源）
 │   ├── traceability-matrix/SKILL.md
-│   ├── baseline-gate/SKILL.md
-│   ├── context-handoff/SKILL.md
+│   ├── baseline-gate/                # SKILL.md + scripts/sdlc-state.js（门禁状态管理）
+│   ├── context-handoff/              # SKILL.md + scripts/validate-handoff.js（交接块校验）+ examples/（交接块示例）
 │   ├── requirement-clarification/SKILL.md
 │   └── review-checklist/SKILL.md
 ├── commands/
@@ -113,9 +113,6 @@ sdlc-agent-pipeline/
 ├── hooks/
 │   ├── hooks.json              # 钩子配置（PreToolUse 阶段门禁 + SessionStart 状态注入）
 │   └── scripts/gate-check.js   # 确定性门禁脚本
-├── scripts/
-│   ├── sdlc-state.js           # 流水线状态管理（init/confirm/revoke/status[--brief]/reset）
-│   └── validate-handoff.js     # 交接块机器校验（exit 0 通过 / 2 校验失败 / 1 用法错误）
 ├── tests/                      # 脚本单元测试（node --test）
 └── templates/
     ├── docs/

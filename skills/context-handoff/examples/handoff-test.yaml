@@ -1,0 +1,20 @@
+# stage-handoff
+# ===== 示例：test 阶段交接块（追加于 docs/test/<feature>-test-plan.md 末尾）=====
+# 校验：node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" docs/test/<feature>-test-plan.md
+stage: test
+feature: user-points
+status: done
+baseline_doc: docs/test/user-points-test-plan.md
+matrix_updated: true
+items:
+  - id: TC-PNT-001
+    summary: 下单支付后积分发放正向用例（REQ-PNT-001）
+    key_constraint: 断言积分账户增量符合规则，积分流水表记录唯一
+  - id: TC-PNT-002
+    summary: 重复回调幂等性用例（REQ-PNT-001）
+  - id: TC-PNT-003
+    summary: 余额不足兑换拒绝异常用例（REQ-PNT-002）
+    key_constraint: 断言统一响应体错误码且账户余额无变化
+next_stage_needs: []
+open_questions:
+  - 兑换并发 100+ 的性能验收：暂无压测环境，本轮仅功能级验证

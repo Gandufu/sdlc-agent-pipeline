@@ -29,7 +29,8 @@ const SDLC_DIR = path.join(PROJECT_DIR, '.sdlc');
 const STATE_FILE = path.join(SDLC_DIR, 'pipeline-state.json');
 // 追溯矩阵「活文档」位于用户项目内（docs/traceability-matrix.md），init 时从插件模板初始化
 const MATRIX_TARGET = path.join(PROJECT_DIR, 'docs', 'traceability-matrix.md');
-const MATRIX_TEMPLATE = path.join(__dirname, '..', 'templates', 'docs', 'traceability-matrix.md');
+// 脚本位于 <插件根>/skills/baseline-gate/scripts/，向上三级到插件根
+const MATRIX_TEMPLATE = path.join(__dirname, '..', '..', '..', 'templates', 'docs', 'traceability-matrix.md');
 
 const cliArgs = process.argv.slice(2);
 const cmd = cliArgs[0];

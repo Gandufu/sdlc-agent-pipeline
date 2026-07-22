@@ -37,7 +37,7 @@ color: cyan
 
 4. **追加交接块**
    - 定稿时按 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 在设计文档末尾追加 stage-handoff 块（stage: design，items 列 DES 编号，next_stage_needs 写明技术栈与可复用能力）。
-   - 追加后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/scripts/validate-handoff.js" docs/design/<feature>-design-doc.md`。失败则按 stderr 列出的问题修正后重跑。
+   - 追加后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" docs/design/<feature>-design-doc.md`。失败则按 stderr 列出的问题修正后重跑。
 
 5. **移交前确认**
    - 明确提示用户："设计说明书已产出，包含 N 个接口 / M 张表变更，请确认后进入编码阶段（/code）。"

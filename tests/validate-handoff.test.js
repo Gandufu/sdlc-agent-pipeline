@@ -9,7 +9,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 
-const SCRIPT = path.join(__dirname, '..', 'scripts', 'validate-handoff.js');
+const SCRIPT = path.join(__dirname, '..', 'skills', 'context-handoff', 'scripts', 'validate-handoff.js');
 const { run } = require('./helpers');
 
 const VALID_BLOCK = [
@@ -153,4 +153,12 @@ test('缺少参数 → 打印用法，退出码 1', () => {
   const r = run(SCRIPT, [], {});
   assert.strictEqual(r.status, 1);
   assert.match(r.stderr, /用法/);
+});
+
+test('官方示例 examples/*.yaml 均可通过校验（锁定示例与格式约定的一致性）', () => {
+  const examplesDir = path.join(__dirname, '..', 'skills', 'context-handoff', 'examples');
+  for (const f of ['handoff-design.yaml', 'handoff-code.yaml', 'handoff-test.yaml']) {
+    const r = run(SCRIPT, [path.join(examplesDir, f)], {});
+    assert.strictEqual(r.status, 0, `${f} 应通过校验：${r.stderr}`);
+  }
 });

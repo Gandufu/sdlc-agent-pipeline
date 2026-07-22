@@ -39,7 +39,7 @@ color: blue
 
 5. **追加交接块**
    - 定稿时按 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 在基线文档末尾追加机器可读的 stage-handoff 块（stage: requirement，items 列全部 REQ 编号与关键约束，matrix_updated 按实际填写）。
-   - 追加后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/scripts/validate-handoff.js" docs/requirements/<feature-slug>-requirement-spec.md`。失败则按 stderr 列出的问题修正后重跑——定稿以脚本结果为准，不以"我认为已写好"为准。
+   - 追加后运行机器校验，退出码 0 才算定稿完成：`node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" docs/requirements/<feature-slug>-requirement-spec.md`。失败则按 stderr 列出的问题修正后重跑——定稿以脚本结果为准，不以"我认为已写好"为准。
 
 6. **移交前确认**
    - 完成后，明确告知用户："需求规格已产出，请确认 REQ 编号与验收标准是否准确，确认后可进入设计阶段（/design）。"

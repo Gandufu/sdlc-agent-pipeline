@@ -11,7 +11,7 @@ allowed-tools: Bash(node *sdlc-state.js*)
 先通过 Bash 初始化流水线状态（进入编排模式，四阶段均为 pending）。`feature-slug` 从需求描述提炼，用英文 kebab-case：
 
 ```
-node "${CLAUDE_PLUGIN_ROOT}/scripts/sdlc-state.js" init <feature-slug>
+node "${CLAUDE_PLUGIN_ROOT}/skills/baseline-gate/scripts/sdlc-state.js" init <feature-slug>
 ```
 
 若报错"状态已存在"：说明上一次流水线的状态还在。**不要自动重置**——向用户说明情况，由其选择：执行 `reset` 清除重来（会丢失此前 feature 的全部确认态），或沿用现有状态继续编排。初始化成功时，追溯矩阵 `docs/traceability-matrix.md` 会从模板自动初始化（已存在则跳过）。
@@ -36,5 +36,5 @@ node "${CLAUDE_PLUGIN_ROOT}/scripts/sdlc-state.js" init <feature-slug>
 全部完成后，汇总四个基线文件路径与追溯矩阵状态，向用户报告本次闭环是否完整。可运行以下命令附上门禁状态快照：
 
 ```
-node "${CLAUDE_PLUGIN_ROOT}/scripts/sdlc-state.js" status
+node "${CLAUDE_PLUGIN_ROOT}/skills/baseline-gate/scripts/sdlc-state.js" status
 ```

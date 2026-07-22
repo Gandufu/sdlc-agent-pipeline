@@ -10,7 +10,8 @@
  *   node validate-handoff.js <基线文档路径>
  *
  * 校验规则（与 skills/context-handoff/SKILL.md 一一对应）：
- *   - 文档末尾存在 ```yaml 围栏、首行 `# stage-handoff` 的交接块（多个时取最后一个）
+ *   - 存在 stage-handoff 交接块：基线文档中为 ```yaml 围栏、首行 `# stage-handoff`（多个取最后一个）；
+ *     独立交接块文件（examples/、编排模式产物）全文无围栏时，首个非空行为 `# stage-handoff` 即视为交接块
  *   - stage ∈ requirement|design|code|test；status ∈ done|returned
  *   - feature / baseline_doc 非空；matrix_updated 为 true（定稿即应已回填矩阵）
  *   - items 至少一条，每条 id/summary 非空；id 前缀符合阶段约定
@@ -34,7 +35,9 @@ function fail(errors) {
   process.exit(2);
 }
 
-// 提取最后一个 stage-handoff yaml 围栏块（定稿追加在文档末尾，末个为准）
+// 提取最后一个 stage-handoff yaml 围栏块（定稿追加在文档末尾，末个为准）；
+// 兼容独立交接块文件（examples/、编排模式独立产物）：全文无围栏时，
+// 文件首个非空行即 `# stage-handoff` 则视整个文件为交接块
 function extractHandoffBlock(text) {
   const fenceRe = /```ya?ml[^\n]*\n([\s\S]*?)```/g;
   let match;
@@ -44,7 +47,9 @@ function extractHandoffBlock(text) {
     const firstLine = (body.split('\n').find((l) => l.trim() !== '') || '').trim();
     if (firstLine === '# stage-handoff') found = body;
   }
-  return found;
+  if (found) return found;
+  const firstLine = (text.split('\n').find((l) => l.trim() !== '') || '').trim();
+  return firstLine === '# stage-handoff' ? text : null;
 }
 
 // 去掉行尾 ` # 注释`（值本身含「 # 」的概率极低，格式示例均带注释，必须剥离）
@@ -144,7 +149,7 @@ if (!fs.existsSync(file)) {
 const text = fs.readFileSync(file, 'utf8');
 const block = extractHandoffBlock(text);
 if (!block) {
-  fail(['文档中未找到 stage-handoff 交接块（```yaml 围栏、首行 # stage-handoff）——定稿时必须按 skills/context-handoff/SKILL.md 追加']);
+  fail(['未找到 stage-handoff 交接块——基线文档须含 ```yaml 围栏且首行为 # stage-handoff（独立块文件则首个非空行为 # stage-handoff），格式见 skills/context-handoff/SKILL.md']);
 }
 const data = parseHandoff(block);
 const errors = validate(data);

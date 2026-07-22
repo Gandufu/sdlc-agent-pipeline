@@ -13,7 +13,7 @@ const path = require('node:path');
 
 const ROOT = path.join(__dirname, '..');
 const GATE = path.join(ROOT, 'hooks', 'scripts', 'gate-check.js');
-const STATE = path.join(ROOT, 'scripts', 'sdlc-state.js');
+const STATE = path.join(ROOT, 'skills', 'baseline-gate', 'scripts', 'sdlc-state.js');
 
 /** 创建一个隔离的临时「用户项目」目录（留在 os tmpdir，由操作系统清理）。 */
 function mkProject() {

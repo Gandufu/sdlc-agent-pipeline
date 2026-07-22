@@ -1,0 +1,23 @@
+# stage-handoff
+# ===== 示例：code 阶段交接块 =====
+# code 阶段无单一基线文档：交接块承载于 developer 创建的 docs/code/<feature>-code-handoff.md
+# （baseline_doc 即指向该交接文档本身）。
+# items.id 为具体文件路径/类名，不用「已完成」等模糊描述；code 阶段 id 不限编号前缀。
+# 校验：node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" docs/code/<feature>-code-handoff.md
+stage: code
+feature: user-points
+status: done
+baseline_doc: docs/code/user-points-code-handoff.md
+matrix_updated: true
+items:
+  - id: src/main/java/com/example/points/controller/PointsController.java
+    summary: 积分发放/兑换接口入口（DES-PNT-001、DES-PNT-002）
+  - id: src/main/java/com/example/points/service/impl/PointsServiceImpl.java
+    summary: 积分账务核心实现
+    key_constraint: @Transactional 与订单同事务；订单号唯一索引保证幂等
+  - id: src/frontend/src/api/points.js
+    summary: 前端积分 API 封装（对应 DES-PNT-001/002）
+next_stage_needs:
+  - 测试重点：发放金额正确性、重复兑换防护（幂等）、越权访问拒绝
+  - 单元测试骨架已就位：PointsServiceImplTest（由 tester 补全用例）
+open_questions: []

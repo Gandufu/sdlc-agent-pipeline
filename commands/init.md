@@ -16,7 +16,7 @@ allowed-tools: Bash(node *sdlc-state.js*)
 2. 从需求内容提炼 `feature-slug`（英文 kebab-case），通过 Bash 初始化流水线状态（四阶段均为 pending；追溯矩阵 `docs/traceability-matrix.md` 会从模板自动初始化，已存在则跳过）：
 
    ```
-   node "${CLAUDE_PLUGIN_ROOT}/scripts/sdlc-state.js" init <feature-slug>
+   node "${CLAUDE_PLUGIN_ROOT}/skills/baseline-gate/scripts/sdlc-state.js" init <feature-slug>
    ```
 
    若报错“状态已存在”：说明上一次流水线的状态还在。**不要自动重置**——向用户说明情况，由其选择：执行 `reset` 清除重来（会丢失此前 feature 的全部确认态），或沿用现有状态继续初始化。

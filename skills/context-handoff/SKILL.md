@@ -34,6 +34,8 @@ open_questions:             # 未决问题；无则留空数组 []
   - 并发量级待确认
 ```
 
+> 各阶段完整示例见 `examples/`（可照抄适配，且均可被本 skill 的 `scripts/validate-handoff.js` 校验通过）：`handoff-design.yaml` / `handoff-code.yaml` / `handoff-test.yaml`；requirement 阶段以上文格式围栏为例。
+
 ## 各阶段 items 的编号约定
 
 | 阶段 | items.id 前缀 | 含义 |
@@ -51,4 +53,4 @@ open_questions:             # 未决问题；无则留空数组 []
 2. **与门禁联动**：`/approve <phase>` 写入确认态前，应确认交接块已存在且 `matrix_updated: true`（否则 reviewer 应判退回，见 `${CLAUDE_PLUGIN_ROOT}/skills/review-checklist/SKILL.md`）。
 3. **向后兼容**：交接块是追加内容，不改变 docs/ 文档既有结构；单独运行某阶段命令（非编排模式）时同样建议产出，便于后续接编排引擎。
 4. **open_questions 不编造结论**：未决项如实列出，下一阶段不得无视，须先澄清或显式承接。
-5. **机器校验为准（evidence over claims）**：追加交接块后必须运行 `node "${CLAUDE_PLUGIN_ROOT}/scripts/validate-handoff.js" <基线文档路径>`，退出码 0 才视为定稿完成；失败时按 stderr 列出的问题逐条修正后重跑。reviewer 评审复检、编排引擎解析前同样以该脚本结果为准。退出码约定与门禁脚本一致：0 通过、2 校验失败、1 用法/文件错误。
+5. **机器校验为准（evidence over claims）**：追加交接块后必须运行 `node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" <基线文档路径>`，退出码 0 才视为定稿完成；失败时按 stderr 列出的问题逐条修正后重跑。reviewer 评审复检、编排引擎解析前同样以该脚本结果为准。退出码约定与门禁脚本一致：0 通过、2 校验失败、1 用法/文件错误。

@@ -10,7 +10,7 @@ allowed-tools: Bash(node *sdlc-state.js*)
 2. 通过 Bash 运行以下命令写入确认态（开启后续阶段门禁）：
 
    ```
-   node "${CLAUDE_PLUGIN_ROOT}/scripts/sdlc-state.js" confirm "$ARGUMENTS"
+   node "${CLAUDE_PLUGIN_ROOT}/skills/baseline-gate/scripts/sdlc-state.js" confirm "$ARGUMENTS"
    ```
 
 3. 依据输出向用户报告：该阶段确认态已写入、后续阶段门禁已开启，可进入下一阶段。

@@ -1,0 +1,20 @@
+# stage-handoff
+# ===== 示例：design 阶段交接块（追加于 docs/design/<feature>-design-doc.md 末尾）=====
+# 校验：node "${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/scripts/validate-handoff.js" docs/design/<feature>-design-doc.md
+stage: design
+feature: user-points
+status: done
+baseline_doc: docs/design/user-points-design-doc.md
+matrix_updated: true
+items:
+  - id: DES-PNT-001
+    summary: 积分发放接口（POST /api/points/earn）
+    key_constraint: 与订单同事务扣减发放，订单号幂等防重复发放
+  - id: DES-PNT-002
+    summary: 积分兑换接口（POST /api/points/redeem）
+    key_constraint: 账户余额乐观锁防超兑；失败走统一响应体错误码
+next_stage_needs:
+  - 技术栈：Java + Spring Boot（后端）、Vue（前端）
+  - 复用框架能力：登录鉴权拦截器、统一分页组件（见 existing-framework.md）
+  - 涉及表：t_points_account（新增）、t_points_record（新增）
+open_questions: []
