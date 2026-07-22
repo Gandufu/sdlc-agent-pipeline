@@ -28,6 +28,14 @@
 - **编排/交互双档义务**（mattpocock「branch」原则：共用核心、路径专属内容按路径加载）：以 `.sdlc/pipeline-state.json` 存在与否为信号（与门禁同一信号）。编排模式=全套义务（交接块必须 + code-handoff 文档必须 + 机器校验强制）；交互模式=轻量义务（矩阵与阶段文档必须，交接块建议不强制，reviewer 有块才复检）。先交互后转编排时，所缺交接块经 `/review` 补写复检。
 - **agent no-op 修剪**（mattpocock 逐句 no-op 测试）：删除五个 agent 中与同文件工作流步骤或 pipeline-overview 硬约束重复、不改变模型行为的句子——requirements-analyst 与 tester 的「禁止事项」整节删除（每条均已被覆盖），architect 与 developer 的禁止事项压缩并改写为正面完成标准。
 
+### Fixed
+
+- **全局异常处理模板的 `Exception.class` 兜底陷阱**（e2e 闭环验证发现的 P0，根因在模板自身）：`GlobalExceptionHandler.java.template` 改为继承 `ResponseEntityExceptionHandler` 的正统范式——Spring MVC 标准异常（405/404/400 等）由父类按正确 HTTP 状态处理，兜底 handler 经 `ResponseEntity` 显式返回 HTTP 500；原模板的裸 `@ExceptionHandler(Exception.class)` 会把协议异常捕获并改写为 HTTP 200（body code=500），使生成的代码天然违反 405/404 接口契约且令监控误判。`rules/spring.md` 全局异常处理节同步新范式，并新增 Controller 协议边缘测试约定（真实 HTTP 请求断言 405/404）。
+
+### Changed (e2e 反馈)
+
+- **developer 自检清单新增测试纪律**：本机可运行时实际执行一遍已有单元测试（`mvn test` / `npm test` 等）并要求零失败，不可运行则在交接文档显式注明；Controller 测试骨架必须含协议边缘状态（405/404）端到端断言。上述 P0 若在 developer 自检阶段跑过测试骨架即可提前一阶段发现。
+
 ## [0.1.0] - 2026-07-22
 
 ### Added

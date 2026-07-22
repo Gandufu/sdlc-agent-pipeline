@@ -38,6 +38,8 @@ color: green
    - [ ] 命名、分层、异常处理是否符合对应 rules/*.md？
    - [ ] 是否补充了对应 REQ/DES 编号注释？
    - [ ] 是否生成了对应的单元测试骨架（交由 tester agent 补全用例）？
+   - [ ] 本机可运行时，是否实际执行了一遍已有单元测试（`mvn test` / `npm test` 等）且零失败？环境不可运行则在交接文档显式注明「未运行测试，由 tester 阶段补齐」。
+   - [ ] Controller 测试骨架是否包含协议边缘状态（405/404 等）的端到端断言（见 `${CLAUDE_PLUGIN_ROOT}/rules/spring.md`）？
 
 4. **定稿（矩阵回填 + 交接块 + 校验）**
    - 执行 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 的**定稿协议**（流程唯一源；以下仅为本阶段参数）：stage=code；矩阵=把每个 DES-xxx 对应的代码位置（文件路径/类名）填入；交接文档=`docs/code/<feature>-code-handoff.md`（编排模式必须创建，交互模式可不建）；items=具体文件路径/类名，不用"已完成"等模糊描述。

@@ -16,11 +16,13 @@ public class ApiResponse<T> {
 
 ## 全局异常处理
 
-使用 `@RestControllerAdvice` 统一捕获：
+使用 `@RestControllerAdvice` **继承 `ResponseEntityExceptionHandler`** 统一收口：
 
-- `BusinessException` → 返回对应业务错误码
-- 参数校验异常（`MethodArgumentNotValidException`）→ 统一格式化字段级错误信息
-- 未捕获异常 → 统一包装为 `code=500`，不暴露堆栈给前端
+- Spring MVC 标准异常（405 方法不支持 / 404 路径不存在 / 400 请求体不可读 等）由父类按正确 HTTP 状态处理；**禁止**用裸 `@ExceptionHandler(Exception.class)` 捕获后直接返回响应体——那会把协议异常改写为 HTTP 200（body code=500），破坏 HTTP 状态语义并使监控误判（e2e 实证 P0，勿蹈覆辙）。
+- `BusinessException` → HTTP 200 + 统一响应体业务错误码（业务错误以 body code 区分）。
+- 参数校验异常（`MethodArgumentNotValidException`）→ 覆写父类对应方法，保留 HTTP 400 的同时换成统一响应体。
+- 真正未知的异常 → 兜底 handler 经 `ResponseEntity` 显式返回 HTTP 500；**HTTP 状态必须与 body code 语义一致**（监控读 HTTP 状态），不暴露堆栈给前端。
+- Controller 层测试必须包含**协议边缘状态**的端到端断言（错误方法 → 405、不存在路径 → 404 等），且用发真实 HTTP 请求的方式（`@SpringBootTest(webEnvironment = RANDOM_PORT)` + `TestRestTemplate`）——仅 MockMvc 断言不一定暴露状态码被改写的问题。
 
 参考模板：`${CLAUDE_PLUGIN_ROOT}/templates/code/spring/GlobalExceptionHandler.java.template`。
 

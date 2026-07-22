@@ -1,35 +1,51 @@
 package com.<company>.<project>.common;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.stream.Collectors;
 
-// 全局异常处理，见 rules/spring.md —— 所有Controller的异常统一在此收口，不允许在Controller里各自try-catch
+// 全局异常处理，见 rules/spring.md —— 所有Controller的异常统一在此收口，不允许在Controller里各自try-catch。
+//
+// 关键范式（踩坑记录）：必须继承 ResponseEntityExceptionHandler。
+// Spring MVC 标准异常（405 方法不支持 / 404 路径不存在 / 400 请求体不可读 等）由父类按
+// 正确的 HTTP 状态处理；**不要**写裸的 @ExceptionHandler(Exception.class) 直接返回响应体对象——
+// 那会把上述协议异常一并捕获并改写为 HTTP 200（body code=500），破坏 HTTP 状态语义，
+// 只看 HTTP 状态的监控/网关会误判，接口契约（如"错误方法应返回 405"）也随之失效。
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    // 业务异常：HTTP 200 + 统一响应体业务错误码（业务错误以 body code 区分）
     @ExceptionHandler(BusinessException.class)
     public ApiResponse<Void> handleBusinessException(BusinessException ex) {
         return ApiResponse.fail(ex.getCode(), ex.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiResponse<Void> handleValidException(MethodArgumentNotValidException ex) {
+    // 参数校验异常：覆写父类方法，保留 HTTP 400 的同时换成统一响应体
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining("; "));
-        return ApiResponse.fail(400, message);
+        return ResponseEntity.badRequest().body(ApiResponse.fail(400, message));
     }
 
+    // 真正未知的异常兜底：经 ResponseEntity 显式返回 HTTP 500（而非裸返回体的默认 200），不向前端暴露堆栈
     @ExceptionHandler(Exception.class)
-    public ApiResponse<Void> handleUnknownException(Exception ex) {
+    public ResponseEntity<ApiResponse<Void>> handleUnknownException(Exception ex) {
         log.error("未捕获异常", ex);
-        // 不向前端暴露堆栈信息
-        return ApiResponse.fail(500, "系统繁忙，请稍后重试");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.fail(500, "系统繁忙，请稍后重试"));
     }
 }
