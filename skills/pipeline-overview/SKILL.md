@@ -75,6 +75,6 @@ description: 当使用 /pipeline 或 /init 编排全流程、任一阶段 skill/
 | skills/stage-dispatch | 阶段调度 SOP（门禁+派发+汇报，design/code/test 复用） |
 | skills/writing-pipeline-skills | 元技能：如何新增/修改 skill |
 
-> `skills/karpathy-guidelines`（通用编码行为准则）与本插件"四阶段闭环"身份不匹配，已从分发表排除（见 `.claude-plugin/marketplace.json` 的 `skills` 数组）；仓库内保留以备拆为独立插件。
+> `karpathy-guidelines`（通用编码行为准则）与本插件"四阶段闭环"身份不匹配，已移出 `skills/` 到仓库根 `contrib/`（待拆为独立插件）。它不在分发扫描路径上，无论 `.claude-plugin/marketplace.json` 的 `skills` 白名单字段是否生效，都不会随本插件分发。
 
 > 组件架构与设计依据（为什么选 skill 优先、agent 工具限制的官方出处、参考的社区实践）见仓库 `README.md`——本文件只保留运行时路由与硬约束，维护者向背景不在此重复。新增/修改 skill 的规范见 `${CLAUDE_PLUGIN_ROOT}/skills/writing-pipeline-skills/SKILL.md`。

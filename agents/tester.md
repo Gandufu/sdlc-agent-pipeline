@@ -47,7 +47,7 @@ skills:
    - 若测试失败，记录失败原因与复现步骤，**不修改源代码**。
 
 4. **定稿（矩阵回填 + 交接块 + 校验）**
-   - 执行 context-handoff skill 的**定稿协议**（已预加载；以下仅为本阶段参数）：stage=test；基线文档=本测试计划文档；矩阵=为每个 REQ-xxx 补齐对应 TC-xxx 与测试结论，形成完整的 需求→设计→代码→测试 追溯闭环；items=TC 编号与结论；next_stage_needs 可为空数组。
+   - 先 Read `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 取得**定稿协议**完整定义（不要凭记忆或参数猜测字段名）；本阶段参数：stage=test；基线文档=本测试计划文档；矩阵=为每个 REQ-xxx 补齐对应 TC-xxx 与测试结论，形成完整的 需求→设计→代码→测试 追溯闭环；items=TC 编号与结论；next_stage_needs 可为空数组。
    - 若发现设计或代码与需求验收标准不一致，**不要擅自修改代码**，而是在测试报告中标记差异，退回给对应阶段确认。
 
 5. **收尾**

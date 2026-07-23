@@ -42,7 +42,7 @@ skills:
    - 涉及前后端联调的接口，需给出请求/响应字段示例（字段名、类型、是否必填）。
 
 3. **定稿（矩阵回填 + 交接块 + 校验）**
-   - 执行 context-handoff skill 的**定稿协议**（已预加载；以下仅为本阶段参数）：stage=design；基线文档=`docs/design/<feature>-design-doc.md`；矩阵=把每个 DES-xxx 关联到对应 REQ-xxx；items=DES 编号；next_stage_needs 写明技术栈与可复用能力。
+   - 先 Read `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 取得**定稿协议**完整定义（不要凭记忆或参数猜测字段名）；本阶段参数：stage=design；基线文档=`docs/design/<feature>-design-doc.md`；矩阵=把每个 DES-xxx 关联到对应 REQ-xxx；items=DES 编号；next_stage_needs 写明技术栈与可复用能力。
 
 4. **移交前确认**
    - 明确提示用户："设计说明书已产出，包含 N 个接口 / M 张表变更，请确认后进入编码阶段（/code）。"

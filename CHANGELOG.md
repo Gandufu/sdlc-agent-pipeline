@@ -8,7 +8,9 @@
 
 ### Changed
 
-- **marketplace.json 加 `skills` 数组**：利用官方「source 解析为 marketplace 根时，`skills` 声明替换默认目录扫描」的例外规则，显式圈定分发清单。`karpathy-guidelines` 从分发排除——它与「四阶段闭环」插件身份不匹配，仓库内保留以备拆为独立插件。
+- **marketplace.json 加 `skills` 数组**：利用官方「source 解析为 marketplace 根时，`skills` 声明替换默认目录扫描」的例外规则，显式圈定分发清单。
+- **`karpathy-guidelines` 物理移出 `skills/` → `contrib/`**：不再仅靠 marketplace 白名单排除——改为移出分发扫描路径，无论白名单字段是否生效都不随插件分发。
+- **agent 不再依赖 `skills:` 预加载**：`claude --print --plugin-dir ... --agent architect` 探针实测发现，agent 的 `skills:` frontmatter 未把 SKILL.md 正文注入上下文（静默失效，呼应 Claude Code issue #25834）。architect/developer/tester 定稿步骤改为显式 Read `context-handoff/SKILL.md`，不再写「已预加载」；`skills:` 字段保留但不依赖。
 - **pipeline-overview 瘦身**：第6节「组件架构说明」（维护者向设计背景）移除；运行时硬约束「grill 必须在主会话——子代理不能用 AskUserQuestion」并入第2节。维护背景统一指向 README。
 - **19 个 skill 的 description 改写**：按 obra/superpowers 原则只写「何时用」、删除「是什么」摘要——避免模型照 description 概括走捷径而跳读正文。
 - **抽取 `skills/stage-dispatch/`（model-invoked）**：承载 design/code/test 共享的「门禁检查→派发子代理→汇报」骨架；三个 user-invoked skill 瘦身为「引用 + 四个参数（phase/prev/agent/input）」。`/pipeline` 随之改为只引用 model-invoked skill（需求走 requirement-clarification、设计/编码/测试走 stage-dispatch），不再调用任何 user-invoked skill（曾违反「user-invoked 不得调 user-invoked」）。决策见 ADR-0002。

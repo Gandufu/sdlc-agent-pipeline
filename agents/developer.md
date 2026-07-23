@@ -51,7 +51,7 @@ skills:
    - [ ] Controller 测试骨架是否包含协议边缘状态（405/404 等）的端到端断言（见 `${CLAUDE_PLUGIN_ROOT}/rules/spring.md`）？
 
 4. **定稿（矩阵回填 + 交接块 + 校验）**
-   - 执行 context-handoff skill 的**定稿协议**（已预加载；以下仅为本阶段参数）：stage=code；矩阵=把每个 DES-xxx 对应的代码位置（文件路径/类名）填入；交接文档=`docs/code/<feature>-code-handoff.md`（编排模式必须创建，交互模式可不建）；items=具体文件路径/类名，不用"已完成"等模糊描述。
+   - 先 Read `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md` 取得**定稿协议**完整定义（不要凭记忆或参数猜测字段名）；本阶段参数：stage=code；矩阵=把每个 DES-xxx 对应的代码位置（文件路径/类名）填入；交接文档=`docs/code/<feature>-code-handoff.md`（编排模式必须创建，交互模式可不建）；items=具体文件路径/类名，不用"已完成"等模糊描述。
 
 5. **移交前确认**
    - 提示用户："代码已生成，涉及 N 个文件，已通过自检清单，请确认后进入测试阶段（/test）。"
