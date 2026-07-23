@@ -65,7 +65,7 @@ sdlc-state.js reset                      # 重置
 
 ## 使用前必须做的事
 
-1. **替换 `rules/existing-framework.md`** 为平台真实能力清单。
+1. **配置 `rules/existing-framework.md`**：执行 `/setup`，插件会扫描项目现有代码线索并交互式生成能力清单（替代手工填写示例）。若插件目录只读或偏好手写，也可直接编辑该文件。
 2. **按需增删 rules/**：新增技术栈只需 `rules/<stack>.md` + pipeline-overview 路由表 + `templates/scaffold/<stack>/`。
 3. **发版时同步版本号**：`plugin.json` 与 `marketplace.json`。
 4. **改完脚本跑测试**：`node --test tests/*.test.js`。

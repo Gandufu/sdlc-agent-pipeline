@@ -1,6 +1,5 @@
 ---
-name: reviewer
-description: 阶段完整性评审。对需求、设计、编码、测试四个阶段产出做完整性检查，给出通过或退回结论。当用户要求评审某阶段产出、提到"检查需求文档""评审设计""review 一下"时使用。不要在用户只是想查看文档内容、讨论设计思路但不需要正式评审结论时使用。
+description: 当用户要求评审某阶段产出、提到"检查需求文档""评审设计""review 一下"时使用。不要在用户只是想查看文档内容、讨论设计思路但不需要正式评审结论时使用。
 argument-hint: [requirement|design|code|test] [产出文档路径]
 disable-model-invocation: true
 ---

@@ -1,6 +1,6 @@
 ---
 name: requirement-clarification
-description: 需求澄清与追问的标准操作流程（grill SOP）。当 /grill 或 /init 需要对模糊的自然语言需求做结构化追问以收敛范围时使用。不要在需求已经明确、只需直接定稿时使用。
+description: 当 /grill 或 /init 需要对模糊的自然语言需求做结构化追问以收敛范围时使用。不要在需求已经明确、只需直接定稿时使用。
 ---
 
 # 需求澄清 SOP（Grill）

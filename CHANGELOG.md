@@ -6,9 +6,32 @@
 
 ## [Unreleased]
 
+### Changed
+
+- **marketplace.json 加 `skills` 数组**：利用官方「source 解析为 marketplace 根时，`skills` 声明替换默认目录扫描」的例外规则，显式圈定分发清单。`karpathy-guidelines` 从分发排除——它与「四阶段闭环」插件身份不匹配，仓库内保留以备拆为独立插件。
+- **pipeline-overview 瘦身**：第6节「组件架构说明」（维护者向设计背景）移除；运行时硬约束「grill 必须在主会话——子代理不能用 AskUserQuestion」并入第2节。维护背景统一指向 README。
+- **19 个 skill 的 description 改写**：按 obra/superpowers 原则只写「何时用」、删除「是什么」摘要——避免模型照 description 概括走捷径而跳读正文。
+- **抽取 `skills/stage-dispatch/`（model-invoked）**：承载 design/code/test 共享的「门禁检查→派发子代理→汇报」骨架；三个 user-invoked skill 瘦身为「引用 + 四个参数（phase/prev/agent/input）」。`/pipeline` 随之改为只引用 model-invoked skill（需求走 requirement-clarification、设计/编码/测试走 stage-dispatch），不再调用任何 user-invoked skill（曾违反「user-invoked 不得调 user-invoked」）。决策见 ADR-0002。
+- **karpathy-guidelines 调整**：保留为仓库内 model-invoked skill，但从分发表排除（见首条）。
+
 ### Added
 
-- **`skills/karpathy-guidelines/`**：集成自 [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)（MIT）。行为准则 skill，涵盖四条准则——编码前先思考、简洁优先、外科手术式改动、目标驱动执行。作为 **model-invoked skill** 存在：元数据始终在上下文，Claude 在编码/评审/重构场景按需自动加载正文，不做强制注入、不常驻 token。未预加载进各子代理的 `skills:` 字段——四条准则是 Claude 已具备的通用工程常识，预加载会每次调用付 token 成本、违背「简洁至关重要」原则；若日后观察到某子代理确有过度设计等具体缺陷，再在对应 agent body 做精准手术式约束。
+- **`skills/setup/`（`/setup`）**：扫描项目现有代码线索（Java `@RestController`/`@PreAuthorize`、Vue 路由/store 等）→ AskUserQuestion 逐项确认 → 写入 `rules/existing-framework.md`，替代 README 里「手工替换示例」的纯人工步骤。
+- **`skills/traceability-matrix/scripts/check-matrix.py`**：把矩阵一致性检查（空 DES/代码位置/TC 列未标 N/A、REQ 编号复用或占位）机器化；退出码非 0 在 `/approve`（design/code/test）时阻断确认（evidence over claims）。配套 `tests/check-matrix.test.js`（9 用例）。
+- **`tests/scaffold.test.js`**：覆盖 java-spring/vue/full 三种拷贝模式与不覆盖语义（6 用例），回归 full 模式 bug。
+- **`docs/adr/`**：ADR-0001（保留 agent 层——工具限制/上下文隔离是不可替代的刚需）、ADR-0002（阶段调度共享 SOP 而非合并/复制）。
+
+### Fixed
+
+- `bin/scaffold.js` `--stack full`：vue 的 `frontend/` 前缀曾在递归中重复拼接，导致首层 ENOENT 崩溃与 `src/frontend/frontend/` 嵌套；改为顶层一次性算好目标根目录。
+- `skills/baseline-gate/scripts/sdlc-state.js`：`PHASE_CMD.requirement` 从不存在的 `/requirement` 改为 `/grill`（SessionStart 钩子曾提示幽灵命令）。
+
+### Fixed（plugin-dev 评估后）
+
+- `skills/grill/SKILL.md`：补 `disable-model-invocation: true`——它是 user-invoked（有 argument-hint、登记为 /grill 命令）却唯独缺此字段，是 user-invoked 集合的一致性回归。现 10 个 user-invoked skill 全部具备。
+- `skills/reviewer/SKILL.md`：删除冗余 `name:` 行（user-invoked 按惯例从目录名推导，且与 `agents/reviewer.md` 同名易混）。
+- `skills/karpathy-guidelines/SKILL.md`：删除冗余 `license: MIT`（license 已在 plugin.json 声明）。
+- 若干 skill description 进一步去除「是什么」残留（stage-dispatch/setup/pipeline-overview/design）；stage-dispatch §1 补「在用户项目根目录运行」工作目录说明；setup §2 标注「新增技术栈需补扫描启发式」以维持 pipeline-overview 不变量。
 
 ## [0.3.0] - 2026-07-23
 

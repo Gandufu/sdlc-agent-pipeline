@@ -1,5 +1,5 @@
 ---
-description: 一键串联 需求分析→设计→编码→测试 全流程，阶段间保留确认点（确定性门禁拦截，不可跳过）。
+description: 当用户希望一次性串联需求→设计→编码→测试四阶段、且接受阶段间强制确认门禁时使用。不要在用户只想单独执行某一阶段时使用。
 argument-hint: [需求描述]
 disable-model-invocation: true
 ---
@@ -20,13 +20,13 @@ node "${CLAUDE_PLUGIN_ROOT}/skills/baseline-gate/scripts/sdlc-state.js" init <fe
 
 **每个阶段完成后必须暂停，等待用户显式确认**；确认后执行 `/approve <phase>` 写入确认态，再进入下一阶段。
 
-1. 按 `${CLAUDE_PLUGIN_ROOT}/skills/grill/SKILL.md` 处理需求：$ARGUMENTS → 产出 `docs/requirements/*.md`
+1. **需求阶段（主会话执行）**：按 `${CLAUDE_PLUGIN_ROOT}/skills/requirement-clarification/SKILL.md` 的追问 SOP 对 $ARGUMENTS 收敛范围，产出 `docs/requirements/*.md`。（需求拷问必须在主会话——子代理不能用 AskUserQuestion。）
    - 【等待确认】→ `/approve requirement`
-2. 按 `${CLAUDE_PLUGIN_ROOT}/skills/design/SKILL.md` 派发 architect 产出设计 → `docs/design/*.md`
+2. **设计阶段**：按 `${CLAUDE_PLUGIN_ROOT}/skills/stage-dispatch/SKILL.md` 调度，参数 `phase`=design、`prev`=requirement、`agent`=architect → `docs/design/*.md`
    - 【等待确认】→ `/approve design`
-3. 按 `${CLAUDE_PLUGIN_ROOT}/skills/code/SKILL.md` 派发 developer 编码 → 代码 + `docs/code/<feature>-code-handoff.md`
+3. **编码阶段**：按 `${CLAUDE_PLUGIN_ROOT}/skills/stage-dispatch/SKILL.md` 调度，参数 `phase`=code、`prev`=design、`agent`=developer → 代码 + `docs/code/<feature>-code-handoff.md`
    - 【等待确认】→ `/approve code`
-4. 按 `${CLAUDE_PLUGIN_ROOT}/skills/test/SKILL.md` 派发 tester 出具测试结论 → `docs/test/*.md`
+4. **测试阶段**：按 `${CLAUDE_PLUGIN_ROOT}/skills/stage-dispatch/SKILL.md` 调度，参数 `phase`=test、`prev`=code、`agent`=tester → `docs/test/*.md`
    - 【等待确认】→ `/approve test`
 
 每个阶段产出须附带结构化交接块（见 `${CLAUDE_PLUGIN_ROOT}/skills/context-handoff/SKILL.md`），并回填追溯矩阵。任一阶段都可经 reviewer skill 做完整性检查；评审退回时按 `${CLAUDE_PLUGIN_ROOT}/skills/baseline-gate/SKILL.md` 的退回协议处理。

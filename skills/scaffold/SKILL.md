@@ -1,6 +1,6 @@
 ---
 name: scaffold
-description: 技术栈脚手架初始化规范。当 /init 需要选择技术栈并拷贝项目骨架时使用。定义了 scaffold 命令的调用方式、模板目录结构与拷贝规则。
+description: 当 /init 需要选择技术栈并拷贝项目骨架时使用。
 ---
 
 # 脚手架初始化规范

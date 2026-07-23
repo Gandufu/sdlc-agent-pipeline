@@ -23,7 +23,9 @@ const path = require('path');
 
 const PHASES = ['requirement', 'design', 'code', 'test'];
 // 阶段 -> 对应斜杠命令（--brief 的「下一步建议」用）
-const PHASE_CMD = { requirement: '/requirement', design: '/design', code: '/code', test: '/test' };
+// 注意：requirement 阶段没有 /requirement 命令——真正的用户入口是 /init（一站式）与 /grill（独立需求拷问）。
+// 状态文件已存在意味着 /pipeline 或 /init 已走过，此时 requirement 未确认的下一步是 /grill 收敛并定稿需求。
+const PHASE_CMD = { requirement: '/grill', design: '/design', code: '/code', test: '/test' };
 const PROJECT_DIR = process.env.CLAUDE_PROJECT_DIR || process.cwd();
 const SDLC_DIR = path.join(PROJECT_DIR, '.sdlc');
 const STATE_FILE = path.join(SDLC_DIR, 'pipeline-state.json');

@@ -1,5 +1,5 @@
 ---
-description: 退回某阶段、撤销其门禁确认态。reviewer 判定退回时使用。
+description: 当 reviewer 判定退回某阶段、需要撤销其门禁确认态时使用。
 argument-hint: [requirement|design|code|test]
 disable-model-invocation: true
 ---

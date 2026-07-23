@@ -1,6 +1,6 @@
 ---
 name: writing-pipeline-skills
-description: 元技能：如何在本 SDLC 流水线插件中新增或修改 skill/agent。当用户要求"加一个新阶段""新增技术栈规则""扩展流水线"时使用。不要在用户只是想使用现有 skill 时使用。
+description: 当用户要求"加一个新阶段""新增技术栈规则""扩展流水线"、需要新增或修改本插件的 skill/agent 时使用。不要在用户只是想使用现有 skill 时使用。
 ---
 
 # 在本插件中新增/修改组件的规范

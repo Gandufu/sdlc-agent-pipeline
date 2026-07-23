@@ -1,6 +1,6 @@
 ---
 name: review-checklist
-description: 分阶段完整性评审清单。当 reviewer agent 对任一阶段（需求/设计/编码/测试）产出做完整性检查、给出通过或退回结论时使用，保证评审可复现、不遗漏。
+description: 当 reviewer agent 对任一阶段（需求/设计/编码/测试）产出做完整性检查、给出通过或退回结论时使用。
 ---
 
 # 分阶段评审清单

@@ -1,7 +1,6 @@
 ---
 name: karpathy-guidelines
 description: 行为准则 skill，用于减少 LLM 编码常见错误。当用户正在编写、评审或重构代码时使用，以避免过度设计、做外科手术式改动、显式暴露假设并定义可验证的成功标准。
-license: MIT
 ---
 
 # Karpathy Guidelines

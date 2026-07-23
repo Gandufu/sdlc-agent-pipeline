@@ -1,6 +1,6 @@
 ---
 name: baseline-gate
-description: 判断某个阶段产出是否已确认、能否推进到下一阶段的门禁判断流程。当 /pipeline 命令编排四阶段流转，或某个agent准备读取上一阶段产出作为输入时使用。
+description: 当 /pipeline 编排四阶段流转、或某 agent 准备读取上一阶段产出作为输入、需要判断该阶段是否已确认能否推进时使用。
 ---
 
 # 基线门禁判断 SOP
