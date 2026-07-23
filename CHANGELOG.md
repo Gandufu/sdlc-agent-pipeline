@@ -8,7 +8,7 @@
 
 ### Changed
 
-- **marketplace.json 加 `skills` 数组**：利用官方「source 解析为 marketplace 根时，`skills` 声明替换默认目录扫描」的例外规则，显式圈定分发清单。
+- **marketplace.json 加 `skills` 数组**：利用官方「source 解析为 marketplace 根时，`skills` 声明替换默认目录扫描」的例外规则，显式圈定分发清单。**实测确认 replace 语义生效**（探针 `/_probe-test` 不在数组里即不分发）——新增 skill 必须同步加入数组。
 - **`karpathy-guidelines` 物理移出 `skills/` → `contrib/`**：不再仅靠 marketplace 白名单排除——改为移出分发扫描路径，无论白名单字段是否生效都不随插件分发。
 - **agent 不再依赖 `skills:` 预加载**：`claude --print --plugin-dir ... --agent architect` 探针实测发现，agent 的 `skills:` frontmatter 未把 SKILL.md 正文注入上下文（静默失效，呼应 Claude Code issue #25834）。architect/developer/tester 定稿步骤改为显式 Read `context-handoff/SKILL.md`，不再写「已预加载」；`skills:` 字段保留但不依赖。
 - **pipeline-overview 瘦身**：第6节「组件架构说明」（维护者向设计背景）移除；运行时硬约束「grill 必须在主会话——子代理不能用 AskUserQuestion」并入第2节。维护背景统一指向 README。

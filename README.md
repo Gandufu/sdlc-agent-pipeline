@@ -70,6 +70,14 @@ sdlc-state.js reset                      # 重置
 3. **发版时同步版本号**：`plugin.json` 与 `marketplace.json`。
 4. **改完脚本跑测试**：`node --test tests/*.test.js`。
 
+## 维护规则（插件开发）
+
+- **新增 skill 必须加白名单**：在 `skills/<name>/` 建 `SKILL.md` 后，**必须**把路径加进 `.claude-plugin/marketplace.json` 的 `skills` 数组。实测确认：marketplace-root（`source: "./"`）下该字段是 **replace 语义**——不在数组里的 skill 不分发（探针 `/_probe-test` 实测验证：它在 `skills/` 下但不在数组里，重新加载后不出现）。漏加 = 新 skill 静默不分发。注意：`plugin.json` 的 `skills` 字段是 Adds 语义（不替代），只有 marketplace entry 的才是 replace。
+- **不要依赖 agent `skills:` 预加载**：实测（`claude --print --plugin-dir … --agent architect` 探针）发现 plugin agent 的 `skills:` frontmatter 不会把 SKILL.md 正文注入 agent 上下文（呼应 Claude Code issue #25834）。agent 正文需要某协议时，用显式 `Read ${CLAUDE_PLUGIN_ROOT}/skills/<x>/SKILL.md`，**不要写"已预加载"**。
+- **新增 agent 必须有刚需**：能对应「Enforce constraints（工具限制）」或「Preserve context（上下文隔离）」之一，否则用 skill 承载（见 `docs/adr/0001-retain-agents.md`）。
+- **阶段调度复用 stage-dispatch**：新增"派发 agent 的阶段"时，复用 `skills/stage-dispatch/`，只给四参数（phase/prev/agent/input），不要复制「门禁→派发→汇报」body（见 `docs/adr/0002-stage-dispatch-shared-sop.md`）。
+- **新增技术栈**：`rules/<stack>.md` + `pipeline-overview` 第 4 节路由表 + `templates/scaffold/<stack>/`；若要 `/setup` 能探测新栈，再补 `skills/setup/SKILL.md` §2 的扫描启发式。
+
 ## 参考的社区实践
 
 - **obra/superpowers**：零 agents/ 零 commands/ 全 skill 化 + "Mandatory workflows" + "evidence over claims"。
