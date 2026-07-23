@@ -23,7 +23,6 @@ description: |
   </example>
 tools: Read, Grep, Glob
 model: inherit
-color: yellow
 skills:
   - review-checklist
 ---

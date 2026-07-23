@@ -18,7 +18,6 @@ description: |
   </example>
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: inherit
-color: green
 skills:
   - context-handoff
   - traceability-matrix

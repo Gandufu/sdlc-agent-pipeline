@@ -4,6 +4,12 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 发版时须同步 `.claude-plugin/plugin.json` 与 `.claude-plugin/marketplace.json` 两处版本号（见 CLAUDE.md）。
 
+## [Unreleased]
+
+### Added
+
+- **`skills/karpathy-guidelines/`**：集成自 [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)（MIT）。行为准则 skill，涵盖四条准则——编码前先思考、简洁优先、外科手术式改动、目标驱动执行。作为 **model-invoked skill** 存在：元数据始终在上下文，Claude 在编码/评审/重构场景按需自动加载正文，不做强制注入、不常驻 token。未预加载进各子代理的 `skills:` 字段——四条准则是 Claude 已具备的通用工程常识，预加载会每次调用付 token 成本、违背「简洁至关重要」原则；若日后观察到某子代理确有过度设计等具体缺陷，再在对应 agent body 做精准手术式约束。
+
 ## [0.3.0] - 2026-07-23
 
 ### Changed（架构重构 v3：对齐官方插件规范）
